@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Definiendo el titulo de la pagina -->
+    <title>{% block title %} Home {% endblock %}</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"  crossorigin="anonymous">
+    <!--Import bootstrap.css-->
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+        {% if user.is_authenticated %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="{% url 'home' %}">NavarPSI</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item {% if request.get_full_path in '/home/' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home"></i> Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item {% if request.get_full_path in '/solicitud/crear/' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'crear_solicitud' %}"><i class="fas fa-file-contract"></i> Nuevo Servicio</a>
+                    </li>
+                    <li class="nav-item dropdown {% if request.get_full_path in '/registrar/' %} active {% endif %}">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-users-cog"></i> Usuarios
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{% url 'registrar' %}"><i class="fas fa-user-plus"></i></i> Registrar</a>
+                            <a class="dropdown-item" href=""><i class="fas fa-users"></i> Lista</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i> {{ user.username }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#"><i class="fas fa-user"></i> Cuenta</a>
+                            <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Salir</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                            <a class="nav-link" href=""><i class="fas fa-info-circle"></i> Ayuda</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        {% block content %}
+        {% endblock %}
+        <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+        {% endif %}
+    </body>
+</html>

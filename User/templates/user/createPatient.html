@@ -1,0 +1,424 @@
+{% extends './navbar.html' %}
+{% block title %}Crear caso{% endblock %}
+{% block content %}
+{% load dir %}
+<!-- {% load dir %} carga las tags template creadas -->
+    <div class="container">
+        <form action="{% url 'createF01' %}" method="POST" id="F01">
+            <div class="card">
+                <div class="card-header">
+                    Paciente
+                    <div class="float-right">
+                        <a data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Agregar Paciente" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-plus-square"></i>
+                            Crear paciente
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% csrf_token %}
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                            <label for="filter_id_card">Cédula:</label>
+                            <input type="number" id="filter_id_card" class="form-control filter {{errors.fk_user | invalid}}">
+                            <small id="h_address" class="form-text text-danger">{{errors.fk_user | error}}</small>
+                        </div>
+                            
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                            <label for="filter_name">Nombre:</label>
+                            <input type="text" id="filter_name" class="form-control filter {{errors.fk_user | invalid}}">
+                            <small id="h_address" class="form-text text-danger">{{errors.fk_user | error}}</small>
+                        </div>
+                            
+                        </div>
+                        <input type="hidden" name="fk_user" id="fk_user">
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush patient" style="cursor: pointer;">
+                </ul>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header">Diagnostico</div>
+                <div class="m-0 p-0">
+                    <div class="row border-bottom m-0">
+                        <div class="col-sm-6 col-md-4 border p-3">
+                            <h5 class="text-center">Etiología del defecto</h5>
+                            <div class="pl-3 pr-3 {{errors.etiology | invalid:'text-danger'}}">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="etiology1" name="etiology" value="c" class="custom-control-input">
+                                    <label class="custom-control-label" for="etiology1">Congénito</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="etiology2" name="etiology" value="o" class="custom-control-input">
+                                    <label class="custom-control-label" for="etiology2">Oncológico</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="etiology3" name="etiology" value="t" class="custom-control-input">
+                                    <label class="custom-control-label" for="etiology3">Traumático</label>
+                                    <div class="small">{{errors.etiology | error}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 border p-3">
+                            <h5 class="text-center">Zona comprometida</h5>
+                            <div class="pl-3 pr-3 {{errors.zone | invalid:'text-danger'}}">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="zone1" name="zone" value="s" class="custom-control-input">
+                                    <label class="custom-control-label" for="zone1" >Superior</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="zone2" name="zone" value="m" class="custom-control-input">
+                                    <label class="custom-control-label" for="zone2" >Media</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="zone3" name="zone" value="i" class="custom-control-input">
+                                    <label class="custom-control-label" for="zone3" >Inferior</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="zone4" name="zone" value="c" class="custom-control-input">
+                                    <label class="custom-control-label" for="zone4" >Craneo</label>
+                                    <div class="small">{{errors.zone | error}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 border p-3">
+                            <h5 class="text-center">Tiempo de evoluación</h5>
+                            <div class="pl-3 pr-3 {{errors.evolution | invalid:'text-danger'}}">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="evolution1" name="evolution" value="a" class="custom-control-input">
+                                    <label class="custom-control-label" for="evolution1" >Agudo</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="evolution2" name="evolution" value="s" class="custom-control-input">
+                                    <label class="custom-control-label" for="evolution2" >Subagudo</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="evolution3" name="evolution" value="c" class="custom-control-input">
+                                    <label class="custom-control-label" for="evolution3" >Crónico</label>
+                                    <div class="small">{{errors.evolution | error}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 border p-3">
+                            <h5 class="text-center">Diametro del tornillo</h5>
+                            <div class="pl-3 pr-3 {{errors.screw | invalid:'text-danger'}}">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="screw1" name="screw" value="1,5" class="custom-control-input">
+                                    <label class="custom-control-label" for="screw1">1,5 milimetros</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="screw2" name="screw" value="1,7" class="custom-control-input">
+                                    <label class="custom-control-label" for="screw2">1,7 milimetros</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="screw3" name="screw" value="1,8" class="custom-control-input">
+                                    <label class="custom-control-label" for="screw3">1,8 milimetros</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="screw4" name="screw" value="2" class="custom-control-input">
+                                    <label class="custom-control-label" for="screw4">2 milimetros</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="screw5" name="screw" value="otro" class="custom-control-input">
+                                    <label class="custom-control-label" for="screw5">Otro</label>
+                                    <div class="small">{{errors.screw | error}}</div>
+                                </div>
+                                <div class="form-group mt-3">
+                                    <label for="screw_t" class="text-muted">Diametro de tornillo:</label>
+                                    <input type="number" id="screw_t" name="screw_t" class="form-control" disabled>
+                                    <small class="form-text text-muted">Ingrese el diametro del tornillo en milimetros</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 border p-3">
+                            <div class="form-group">
+                                <label for="recession">¿Requiere recesión de hueso?</label>
+                                <select class="custom-select mr-sm-2 {{errors.recession | invalid}}" id="recession" name="recession">
+                                    <option value="1">Si</option>
+                                    <option selected value="0">No</option>
+                                </select>
+                                <div class="small">{{errors.recession | error}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="margen_recession">Margen de recesión:</label>
+                                <input type="number" id="margen_recession" class="form-control {{errors.margen_recession | invalid}}" name="margen_recession" disabled>
+                                <small class="form-text text-muted">Ingrese el margen de recesión en centimetros</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="fastenings">Numero de subjeciones:</label>
+                                <input type="number" id="fastenings" name="fastenings" class="form-control {{errors.fastenings | invalid}}" disabled>
+                                <div class="text-danger small">{{errors.fastenings | error}}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 border p-3">
+                            <h5 class="text-center">Incisiones / Vías de Abordaje Quirúrgico</h5>
+                            <textarea class="form-control {{errors.incisions | invalid}}" name="incisions" rows="7"></textarea>
+                            <div class="text-danger small">{{errors.incisions | error}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="process_q">Procedimiento quirúrgico:</label>
+                                <textarea class="form-control {{errors.process_q | invalid}}" name="process_q" id="process_q" rows="6"></textarea>
+                                <div class="text-danger small">{{errors.process_q | error}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header">Servicio</div>
+                <div class="m-0 p-0">
+                    <div class="row border-bottom m-0">
+                        <div class="col-md-6 col-lg-4 border p-3">
+                            <h5 class="text-center">Servicio Solicitado</h5>
+                            <div class="pl-3 pr-3">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="servicio1" value="1" name="servicio" class="custom-control-input">
+                                    <label class="custom-control-label" for="servicio1">Planeamiento pre-quirúrgico</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="servicio2" value="2" name="servicio" class="custom-control-input">
+                                    <label class="custom-control-label" for="servicio2">Prototipo Pre-quirúrjico</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="servicio3" value="3" name="servicio" class="custom-control-input">
+                                    <label class="custom-control-label" for="servicio3">Prototipo Guía Corte</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="servicio4" value="4" name="servicio" class="custom-control-input">
+                                    <label class="custom-control-label" for="servicio4">Biomodelo Virtual</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="servicio5" value="5" name="servicio" class="custom-control-input">
+                                    <label class="custom-control-label" for="servicio5">Prototipo Post-quirúrjico</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="servicio6" value="6" name="servicio" class="custom-control-input">
+                                    <label class="custom-control-label" for="servicio6">Molde Obtención Injertos</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="servicio7" value="6" name="servicio" class="custom-control-input">
+                                    <label class="custom-control-label" for="servicio7">Diseño de Implante</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-8 border p-3">
+                            <h5 class="text-center" for="observations">Observaciones</h5>
+                            <textarea class="form-control {{errors.observations | invalid}}" id="observations" name="observations" rows="7"></textarea>
+                            <div class="text-danger small">{{errors.observations | error}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dicsm">Ajuntar DICSM</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="dicsm" name="dicsm">
+                                    <label class="custom-file-label" for="dicsm">Elegir file</label>
+                                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="requerimientos">Adjuntar requerimientos</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="requerimientos" name="requerimientos">
+                                    <label class="custom-file-label" for="requerimientos">Choose file</label>
+                                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3">
+                <a  href="#" role="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Solicitar cotización</a>
+            </div>
+        </form>
+    </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Terminos y condiciones</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Acepta los terminos ....
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Rechazo</button>
+                <button type="button" id="submit" class="btn btn-primary">Acepto</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form action="user/create/patient/" method="POST" id="create">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crear Paciente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="id_card">Cédula:</label>
+                                    <input type="number" id="id_card" name="id_card" class="form-control">
+                                    <small id="h_id_card" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="date">Fecha de nacimiento:</label>
+                                    <input type="text" id="datepicker" name="birth" class="form-control">
+                                    <small id="h_birth" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="first_name">Nombre:</label>
+                                    <input type="text" id="first_name" name="first_name" class="form-control">
+                                    <small id="h_first_name" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="last_name">Apellido:</label>
+                                    <input type="text" id="last_name" name="last_name" class="form-control">
+                                    <small id="h_last_name" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="phone">Teléfono:</label>
+                                    <input type="number" id="phone" name="phone" class="form-control">
+                                    <small id="h_phone" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="address">Dirección:</label>
+                                    <input type="text" id="address" name="address" class="form-control">
+                                    <small id="h_address" class="form-text text-danger"></small>
+                                </div>
+                            </div>                                
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function fill(item){ // lleno los input con los valores que llegan del ajax
+            $('.patient').empty();
+            var id_user = $(item).attr('id_user')
+            var id_card = $(item).attr('id_card')
+            var name = $(item).attr('name')
+            $('#filter_id_card').val(id_card);
+            $('#filter_name').val(name);
+            $('#fk_user').val(id_user);
+        }
+        $('#submit').click(function(){
+            $('#F01').submit();
+        })
+        $('input[name="screw"]').change(function(){ // toggle disabled en el campo diametro
+            if($(this).val() == 'otro'){
+                $("#screw_t").prop("disabled", false);
+            } else {
+                $("#screw_t").prop("disabled", true);
+            }
+        });
+        $('#recession').change(function(){ // toggle disabled en los campos subjecciones y margen
+            if($(this).val() == '1'){
+                $("#fastenings").prop("disabled", false);
+                $("#margen_recession").prop("disabled", false);
+            } else {
+                $("#fastenings").prop("disabled", true);
+                $("#margen_recession").prop("disabled", true);
+            }
+        });
+        $('#create').submit(function(e){ // creo una solicitud ajax en la cual creo un nuevo paciente
+            e.preventDefault();
+            data = $(this).serializeArray(); //serializo los calores del formulario 'crear paciente'
+            $.ajax({
+                url: "{% url 'createPatient' %}",
+                data,
+                method: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    if(data.success){ 
+                        $('#exampleModal').modal('hide'); //lleno los datos del paciente recien creado
+                        $('#filter_id_card').val(data.patient.id_card);
+                        $('#filter_name').val(data.patient.first_name+' '+data.patient.last_name);
+                        $('#fk_user').val(data.patient.id_user);
+                    } else { 
+                        $("small[id^='h_']").each(function (i, el) {
+                            $(el).html(''); //limpio los errores en caso que no exista la variable success recibida por la solicitud
+                        });
+                        $.each(data.errors, function(key, value){
+                            $('#h_'+key).html(value); //lleno los small helpers de cada input para indicar los errores del formulario
+                        })
+                    }
+                },
+            });
+        });
+        $(".filter").keyup(function () { // realizo una perticion ajax para filtrar los pacientes por cedula y nombre
+            $('.patient').empty(); //limpio la lista de resultados en caso de una previa consulta
+            var id_card = $('#filter_id_card').val();
+            var name = $('#filter_name').val();
+            var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                url: "{% url 'filterPatient' %}",
+                data: {
+                    id_card,
+                    name,
+                    csrfmiddlewaretoken,
+                },
+                method: 'POST',
+                dataType: 'json',
+                success: function (data) { // en caso de que la solicitud haya sido exitosa, listo los resultados 
+                    $.each(data.patients, function(key, value){
+                        $('.patient').append(
+                            '<li class="list-group-item list-group-item-action select" id_card="'+value.id_card+'" name="'+value.first_name+' '+value.last_name+'" id_user="'+value.id_user+'" onclick="fill(this)">'+
+                                '<div class="d-flex w-100 justify-content-between">'+
+                                    '<h5 class="mb-1">'+value.first_name+' '+value.last_name+'</h5>'+
+                                    '<small>'+new Date(value.birth).toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' })+'</small>'+
+                                '</div>'+
+                                '<p class="mb-1">'+value.id_card+'</p>'+
+                            '</li>'
+                        );
+                    })
+                }
+            });
+
+        });
+    </script>
+{% endblock %}
+        

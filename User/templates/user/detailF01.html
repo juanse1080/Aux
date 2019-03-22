@@ -1,0 +1,186 @@
+{% extends './navbar.html' %}
+{% block title %} Solicitud caso {{ case.id_case }} {% endblock %}
+{% block content %}
+<!-- {% load dir %} -->
+    <div class="container">
+        <div class="card">
+            <div class="card-header">Diagnostico</div>
+            <div class="m-0 p-0">
+                <div class="row border-bottom m-0">
+                    <div class="col-sm-6 col-md-4 border p-3">
+                        <h5 class="text-center">Etiología del defecto</h5>
+                        <div class="pl-3 pr-3 {{errors.etiology | invalid:'text-danger'}}">
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.etiology | radio:'c'}} type="radio" id="etiology1" name="etiology" value="c" class="custom-control-input">
+                                <label class="custom-control-label" for="etiology1">Congénito</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.etiology | radio:'o'}} type="radio" id="etiology2" name="etiology" value="o" class="custom-control-input">
+                                <label class="custom-control-label" for="etiology2">Oncológico</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.etiology | radio:'t'}} type="radio" id="etiology3" name="etiology" value="t" class="custom-control-input">
+                                <label class="custom-control-label" for="etiology3">Traumático</label>
+                                <div class="small">{{errors.etiology | error}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 border p-3">
+                        <h5 class="text-center">Zona comprometida</h5>
+                        <div class="pl-3 pr-3 {{errors.zone | invalid:'text-danger'}}">
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.zone | radio:'s'}} type="radio" id="zone1" name="zone" value="s" class="custom-control-input">
+                                <label class="custom-control-label" for="zone1" >Superior</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.zone | radio:'m'}} type="radio" id="zone2" name="zone" value="m" class="custom-control-input">
+                                <label class="custom-control-label" for="zone2" >Media</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.zone | radio:'i'}} type="radio" id="zone3" name="zone" value="i" class="custom-control-input">
+                                <label class="custom-control-label" for="zone3" >Inferior</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.zone | radio:'c'}} type="radio" id="zone4" name="zone" value="c" class="custom-control-input">
+                                <label class="custom-control-label" for="zone4" >Craneo</label>
+                                <div class="small">{{errors.zone | error}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 border p-3">
+                        <h5 class="text-center">Tiempo de evoluación</h5>
+                        <div class="pl-3 pr-3 {{errors.evolution | invalid:'text-danger'}}">
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.evolution | radio:'a'}} type="radio" id="evolution1" name="evolution" value="a" class="custom-control-input">
+                                <label class="custom-control-label" for="evolution1" >Agudo</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.evolution | radio:'s'}} type="radio" id="evolution2" name="evolution" value="s" class="custom-control-input">
+                                <label class="custom-control-label" for="evolution2" >Subagudo</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.evolution | radio:'c'}} type="radio" id="evolution3" name="evolution" value="c" class="custom-control-input">
+                                <label class="custom-control-label" for="evolution3" >Crónico</label>
+                                <div class="small">{{errors.evolution | error}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 border p-3">
+                        <h5 class="text-center">Diametro del tornillo</h5>
+                        <div class="pl-3 pr-3 {{errors.screw | invalid:'text-danger'}}">
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.screw | radio:'1,5'}} type="radio" id="screw1" name="screw" value="1,5" class="custom-control-input">
+                                <label class="custom-control-label" for="screw1">1,5 milimetros</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.screw | radio:'1,7'}} type="radio" id="screw2" name="screw" value="1,7" class="custom-control-input">
+                                <label class="custom-control-label" for="screw2">1,7 milimetros</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.screw | radio:'1,8'}} type="radio" id="screw3" name="screw" value="1,8" class="custom-control-input">
+                                <label class="custom-control-label" for="screw3">1,8 milimetros</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {{ case.screw | radio:'2'}} type="radio" id="screw4" name="screw" value="2" class="custom-control-input">
+                                <label class="custom-control-label" for="screw4">2 milimetros</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input disabled {% if case.screw != '1,5' and case.screw != '1,7' and case.screw != '1,8' and case.screw != '2' %} checked {% endif %} type="radio" id="screw5" name="screw" value="otro" class="custom-control-input">
+                                <label class="custom-control-label" for="screw5">Otro</label>
+                            </div>
+                            {% if case.screw != '1,5' and case.screw != '1,7' and case.screw != '1,8' and case.screw != '2' %}
+                            <div class="form-group mt-3">
+                                <label for="screw_t" class="text-muted">Diametro de tornillo:</label>
+                                <input readonly type="number" id="screw_t" name="screw_t" class="form-control" value="{{ case.screw }}">
+                                <small class="form-text text-muted">Diametro del tornillo esta medido en milimetros</small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 border p-3">
+                        <div class="form-group">
+                            <label for="recession">¿Requiere recesión de hueso?</label>
+                            <select disabled class="custom-select mr-sm-2 {{errors.recession | invalid}}" id="recession" name="recession">
+                                <option {{case.recession | booleanSelect:True}} value="1">Si</option>
+                                <option {{case.recession | booleanSelect:False}} value="0">No</option>
+                            </select>
+                        </div>
+                        {% if case.recession %}
+                            <div class="form-group">
+                                <label for="margen_recession">Margen de recesión:</label>
+                                <input disabled value="{{ case.margen_recession }}" type="number" id="margen_recession" class="form-control {{errors.margen_recession | invalid}}" name="margen_recession" disabled>
+                                <small class="form-text text-muted">Margen de recesión esta medida en centimetros</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="fastenings">Numero de subjeciones:</label> 
+                                <input disabled value="{{ case.fastenings }}" type="number" id="fastenings" name="fastenings" class="form-control {{errors.fastenings | invalid}}" disabled>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-6 col-md-4 border p-3">
+                        <h5 class="text-center">Incisiones / Vías de Abordaje Quirúrgico</h5>
+                        <textarea readonly class="form-control {{errors.incisions | invalid}}" name="incisions" rows="7">"{{ case.incisions }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="process_q">Procedimiento quirúrgico:</label>
+                            <textarea readonly class="form-control {{errors.process_q | invalid}}" name="process_q" id="process_q" rows="6">"{{ case.process_q }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">Solititud</div>
+            <div class="card-body">
+
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                Propuesta
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="proposal">Propuesta economica:</label>
+                            <input type="number" class="form-control {{errors.proposal | invalid}}" name="proposal" id="proposal">
+                            <div class="text-danger small">{{errors.proposal | error}}</div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="condition">Condiciones de entrega:</label>
+                            <textarea class="form-control {{errors.condition | invalid}}" name="condition" id="condition" rows="6"></textarea>
+                            <div class="text-danger small">{{errors.condition | error}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="description">Descripción:</label>
+                            <textarea class="form-control {{errors.description | invalid}}" name="description" id="description" rows="6"></textarea>
+                            <div class="text-danger small">{{errors.description | error}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="float-right">
+                            <div class="custom-control custom-switch">
+                                <label class="custom-control-label" for="customSwitch1">Aprobación </label>
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends './navbar.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<!-- {% load dir %} -->
+    <div class="container">
+        <div class="card mb-3">
+            <div class="card-header">Solicitudes</div>
+            <div class="list-group">
+                {% for i in case %}
+                    <a href="{% url 'detailF01' pk=i.id_case %}" class="list-group-item list-group-item-action">case {{ i.id_case }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Casos
+                <div class="float-right">
+                    <a href="{% url 'createF01' %}" data-toggle="tooltip" data-placement="top" title="Agregar Paciente" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-plus-square"></i>
+                        Crear caso
+                    </a>
+                </div>
+            </div>
+            <ul class="list-group list-group-flush"></ul>
+        </div>
+    </div>
+
+{% endblock %}
