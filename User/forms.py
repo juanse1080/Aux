@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Case
+from .models import User, Case, Patient
 
 class createPatientForm(forms.ModelForm):
     id_card = forms.CharField(max_length=15)
@@ -9,7 +9,7 @@ class createPatientForm(forms.ModelForm):
     phone = forms.CharField(max_length=10)
     address = forms.CharField(max_length=100)
     class Meta:
-        model = User
+        model = Patient
         fields = [
             'id_card', 
             'birth', 

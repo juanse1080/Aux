@@ -26,12 +26,22 @@ class User(models.Model):
     def show(self):
         return self.__dict__
 
-# class Patient(models.Model):
-#     id_patient = models.AutoField(primary_key=True)
-#     id_card = models.CharField(max_length=15)
-#     birth = models.DateField()
-#     first_name = models.CharField(max_length=35)
-#     last_name = models.CharField(max_length=35)
+class Patient(models.Model):
+    id_patient = models.AutoField(primary_key=True)
+    id_card = models.CharField(max_length=15)
+    birth = models.DateField()
+    first_name = models.CharField(max_length=35)
+    last_name = models.CharField(max_length=35)
+    phone = models.CharField(max_length=10)
+    address = models.CharField(max_length=100)
+
+class Package(models.Model):
+    id_package = models.AutoField(primary_key=True)
+
+class Service(models.Model):
+    id_service = models.AutoField(primary_key=True)
+    fk_package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
+
 
 class Case(models.Model):
     sex_choices = (
@@ -56,7 +66,9 @@ class Case(models.Model):
     )
     id_case = models.AutoField(primary_key=True,  help_text="ID del caso")
     start_day = models.DateField(auto_now_add=True)
+    fk_patient = models.ForeignKey(Patient, null=False, blank=False, on_delete=models.CASCADE)
     fk_user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
+    fk_package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
     ips = models.CharField(max_length=100)
     sex = models.CharField(max_length=10, choices=sex_choices)
     age = models.CharField(max_length=3)

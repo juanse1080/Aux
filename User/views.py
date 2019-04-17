@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.db.models import Q
 
 from .forms import createPatientForm, createF01Form
 from .models import User, Case
+
 
 def detailF01(request, pk):
     return render(request, 'user/detailF01.html', {'case': Case.objects.get(id_case=pk)})
@@ -42,7 +44,7 @@ def createF01(request):
 def filterPatient(request):
     id_card = request.POST.get('id_card')
     name = request.POST.get('name')
-    patients = User.objects.filter(id_card__startswith=id_card, first_name__startswith=name, last_name__startswith=name).order_by('id_card')
+    patients = User.objects.filter(Q(id_card__icontains=id_card), Q(first_name__icontains=name), Q(last_name__icontains=name)).order_by('id_card')
     data = {
         'patients': [{
             'id_user': patient.id_user,
