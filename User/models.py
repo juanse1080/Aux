@@ -1,30 +1,55 @@
 from django.db import models
+from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.utils.translation import ugettext_lazy as _
 
-class User(models.Model):
-
-    REQUIRED_FIELDS = ('password')
-    USERNAME_FIELD = ('id_card')
-    is_anonymous = True
-    is_authenticated = False
-    id_user = models.AutoField(primary_key=True)
-    id_card = models.CharField(max_length=15)
+class User(AbstractBaseUser, PermissionsMixin):
+    id_card = models.CharField(primary_key=True, max_length=15, unique=True)
     birth = models.DateField()
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
     phone = models.CharField(max_length=10)
     address = models.CharField(max_length=100)
     role = models.CharField(max_length=1)
-    password = models.CharField(max_length=20)
     specialty = models.TextField()
     hability = models.TextField()
     email = models.CharField(max_length=60)
-    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)   
+    is_active = models.BooleanField(_('active'), default=True)
+
+    USERNAME_FIELD = 'id_card'
+    REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+    def get_full_name(self):
+        '''
+        Returns the first_name plus the last_name, with a space in between.
+        '''
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def get_short_name(self):
+        '''
+        Returns the short name for the user.
+        '''
+        return self.first_name
+
+    # def email_user(self, subject, message, from_email=None, **kwargs):
+    #     '''
+    #     Sends an email to this User.
+    #     '''
+    #     send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def __str__(self):
-        return self.id_user
+        return self.id_card
 
     def show(self):
         return self.__dict__
+
+
 
 class Patient(models.Model):
     id_patient = models.AutoField(primary_key=True)
