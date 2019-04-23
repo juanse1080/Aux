@@ -1,41 +1,40 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import check_password
-from .forms import login
+from django.contrib import messages
 from User import views, models
 
 def template(request):
-    if request.method == 'POST':
-        auth(request)
-    return render(request, 'registration/login.html', {'form': login})
+    print(request.user.show())
+    if request.user.is_active:
+        return redirect(views.board)
+    else:
+        if request.method == 'POST':
+            # form = login(request.POST)
+            # print(form.errors.__dict__)
+            # if form.is_valid():
+            #     print("funciono")
+            #     return auth(request)
+            # print("error")
+            return auth(request)
+            # return render(request, 'registration/login.html', {'form': form.errors})
+        return render(request, 'registration/login.html')
 
 def auth(request):
-    id_card = request.POST.get('id_card')
+    email = request.POST.get('email')
     password = request.POST.get('password')
-    login_valid = models.User.objects.get(id_card=id_card)
-    print(login_valid.get_full_name())
+    login_valid = models.User.objects.get(email=email)
     pwd_valid = check_password(password, login_valid.password)
     if login_valid and pwd_valid:
-        try:
-            user = User.objects.get(id_card=id_card)
-        except User.DoesNotExist:
-            # Create a new user. There's no need to set a password
-            # because only the password from settings.py is checked.
-            # user = User(username=username)
-            user.is_staff = True
-            user.is_superuser = True
-            user.save()
-        return user
-    return None
-    # user = authenticate(request, id_card=id_card, password=password)
-    # print(user)
-    # if user is not None:
-    #     login(request, user)
-    #     return redirect(views.board)
-    # else:
-    #     return redirect(template)
+        print(request.login_valid)
+        login(request, login_valid)
+        return redirect(views.board)
+    messages.error(request, 'Credenciales incorrectas.')
+    return redirect(template)
 
 def logout_view(request):
+    request.user.is_active = False
+    request.user.save()
     logout(request)
     return redirect(template)
         

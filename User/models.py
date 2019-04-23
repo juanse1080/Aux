@@ -3,9 +3,11 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 
+from .managers import UserManager
+
 class User(AbstractBaseUser, PermissionsMixin):
     id_card = models.CharField(primary_key=True, max_length=15, unique=True)
-    birth = models.DateField()
+    birth = models.DateField(null=True)
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
     phone = models.CharField(max_length=10)
@@ -13,11 +15,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=1)
     specialty = models.TextField()
     hability = models.TextField()
-    email = models.CharField(max_length=60)
+    email = models.CharField(max_length=60, unique=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)   
     is_active = models.BooleanField(_('active'), default=True)
 
-    USERNAME_FIELD = 'id_card'
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     class Meta:
