@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 
 from .forms import createPatientForm, createF01Form
-from .models import User, Case
+from .models import User, Case, Patient
 
 
 def detailF01(request, pk):
@@ -18,7 +18,6 @@ def createPatient(request):
         if form.is_valid():
             patient = form.save()
             return JsonResponse({'success': True, 'patient': {
-                'id_user': patient.id_user,
                 'id_card': patient.id_card,
                 'first_name': patient.first_name,
                 'last_name' : patient.last_name,
@@ -44,10 +43,10 @@ def createF01(request):
 def filterPatient(request):
     id_card = request.POST.get('id_card')
     name = request.POST.get('name')
-    patients = User.objects.filter(Q(id_card__icontains=id_card), Q(first_name__icontains=name), Q(last_name__icontains=name)).order_by('id_card')
+    patients = Patient.objects.filter(Q(id_card__contains=id_card) | Q(first_name__contains=name) | Q(last_name__contains=name))
+    print(patients)
     data = {
         'patients': [{
-            'id_user': patient.id_user,
             'id_card': patient.id_card,
             'first_name': patient.first_name,
             'last_name' : patient.last_name,

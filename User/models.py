@@ -56,13 +56,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Patient(models.Model):
-    id_patient = models.AutoField(primary_key=True)
-    id_card = models.CharField(max_length=15)
+    id_card = models.CharField(max_length=15, unique=True)
     birth = models.DateField()
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
     phone = models.CharField(max_length=10)
-    address = models.CharField(max_length=100)
+    address = models.CharField(max_length=100, null=True)
 
 class Package(models.Model):
     id_package = models.AutoField(primary_key=True)

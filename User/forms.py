@@ -3,10 +3,10 @@ from .models import User, Case, Patient
 
 class createPatientForm(forms.ModelForm):
     id_card = forms.CharField(max_length=15)
-    birth = forms.DateField()
+    birth = forms.DateField(input_formats=["%m/%d/%Y"])
     first_name = forms.CharField(max_length=35)
     last_name = forms.CharField(max_length=35)
-    phone = forms.CharField(max_length=10)
+    phone = forms.IntegerField(max_value=9999999999)
     address = forms.CharField(max_length=100)
     class Meta:
         model = Patient
