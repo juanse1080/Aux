@@ -36,6 +36,7 @@ class createF01Form(forms.ModelForm):
         ('s', 'subagudo'),
         ('c', 'cronico'),
     )
+    fk_patient = forms.ModelChoiceField(queryset=Patient.objects.all(), widget=forms.IntegerField, empty_label=None)
     process_q = forms.CharField()
     etiology = forms.ChoiceField(choices=etiology_choices)
     zone = forms.ChoiceField(choices=zone_choices)
@@ -49,8 +50,7 @@ class createF01Form(forms.ModelForm):
     class Meta:
         model = Case
         fields = [
-            'fk_user',
-            # 'metallic_artifacts',
+            'fk_patient',
             'process_q',
             'etiology',
             'zone',

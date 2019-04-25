@@ -1,17 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db.models import Q
 
 from .forms import createPatientForm, createF01Form
 from .models import User, Case, Patient
 
-
+@login_required
 def detailF01(request, pk):
     return render(request, 'user/detailF01.html', {'case': Case.objects.get(id_case=pk)})
-    
+
+@login_required    
 def board(request):
     return render(request, 'user/board.html', {'case': Case.objects.all()})
 
+@login_required
 def createPatient(request):
     if request.is_ajax():
         form = createPatientForm(request.POST)
@@ -25,6 +28,7 @@ def createPatient(request):
             }})
         return JsonResponse({'errors':form.errors})
 
+@login_required
 def createF01(request):
     if request.method == 'POST':
         request.POST._mutable = True
@@ -33,13 +37,14 @@ def createF01(request):
         if request.POST.get('recession') == '0':
             request.POST.update({'margen_recession': None, 'fastenings' : None})   
         form = createF01Form(request.POST)
-        
+        print(request.POST)
         if form.is_valid():
             F01 = form.save()
             return redirect(board)
         return render(request, 'user/createPatient.html', {'errors':form.errors})
     return render(request, 'user/createPatient.html')
 
+@login_required
 def filterPatient(request):
     id_card = request.POST.get('id_card')
     name = request.POST.get('name')

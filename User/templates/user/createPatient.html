@@ -21,20 +21,20 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                             <label for="filter_id_card">Cédula:</label>
-                            <input type="number" id="filter_id_card" class="form-control filter {{errors.fk_user | invalid}}">
-                            <small id="h_address" class="form-text text-danger">{{errors.fk_user | error}}</small>
+                            <input type="number" id="filter_id_card" class="form-control filter {{errors.fk_patient | invalid}}">
+                            <small id="h_address" class="form-text text-danger">{{errors.fk_patient | error}}</small>
                         </div>
                             
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                             <label for="filter_name">Nombre:</label>
-                            <input type="text" id="filter_name" class="form-control filter {{errors.fk_user | invalid}}">
-                            <small id="h_address" class="form-text text-danger">{{errors.fk_user | error}}</small>
+                            <input type="text" id="filter_name" class="form-control filter {{errors.fk_patient | invalid}}">
+                            <small id="h_address" class="form-text text-danger">{{errors.fk_patient | error}}</small>
                         </div>
                             
                         </div>
-                        <input type="hidden" name="fk_user" id="fk_user">
+                        <input type="hidden" name="fk_patient" id="fk_patient">
                     </div>
                 </div>
                 <ul class="list-group list-group-flush patient" style="cursor: pointer;">
@@ -338,12 +338,11 @@
     <script>
         function fill(item){ // lleno los input con los valores que llegan del ajax
             $('.patient').empty();
-            var id_user = $(item).attr('id_user')
             var id_card = $(item).attr('id_card')
             var name = $(item).attr('name')
             $('#filter_id_card').val(id_card);
             $('#filter_name').val(name);
-            $('#fk_user').val(id_user);
+            $('#fk_patient').val(id_card);
         }
         $('#submit').click(function(){
             $('#F01').submit();
@@ -377,7 +376,7 @@
                         $('#exampleModal').modal('hide'); //lleno los datos del paciente recien creado
                         $('#filter_id_card').val(data.patient.id_card);
                         $('#filter_name').val(data.patient.first_name+' '+data.patient.last_name);
-                        $('#fk_user').val(data.patient.id_user);
+                        $('#fk_patient').val(data.patient.id_card);
                     } else { 
                         $("small[id^='h_']").each(function (i, el) {
                             $(el).html(''); //limpio los errores en caso que no exista la variable success recibida por la solicitud
@@ -406,7 +405,7 @@
                 success: function (data) { // en caso de que la solicitud haya sido exitosa, listo los resultados 
                     $.each(data.patients, function(key, value){
                         $('.patient').append(
-                            '<li class="list-group-item list-group-item-action select" id_card="'+value.id_card+'" name="'+value.first_name+' '+value.last_name+'" id_user="'+value.id_user+'" onclick="fill(this)">'+
+                            '<li class="list-group-item list-group-item-action select" id_card="'+value.id_card+'" name="'+value.first_name+' '+value.last_name+'" onclick="fill(this)">'+
                                 '<div class="d-flex w-100 justify-content-between">'+
                                     '<h5 class="mb-1">'+value.first_name+' '+value.last_name+'</h5>'+
                                     '<small>'+new Date(value.birth).toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' })+'</small>'+

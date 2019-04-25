@@ -1,5 +1,5 @@
 {% extends './navbar.html' %}
-{% block title %}Home{% endblock %}
+{% block title %}Login{% endblock %}
 {% block content %}
 {% load dir %}
     <div class="container">      
@@ -18,7 +18,7 @@
                                     <i class="fas fa-user"></i>
                                   </span>
                                 </div>
-                                <input id="email" name="email" type="text" class="form-control {% if messages %} is-invalid {% endif %}" placeholder="Correo electronico">
+                                <input id="email" name="email" type="text" class="form-control {% if messages %} is-invalid {% endif %}" placeholder="example@example.com">
                               </div>
                               <small id="email" class="form-text text-danger">{{errors.email | error}}</small>
                           </div>
@@ -30,7 +30,7 @@
                                     <i class="fas fa-key"></i>
                                   </span>
                                 </div>
-                                <input id="password" name="password" type="password" class="form-control {% if messages %} is-invalid {% endif %}" placeholder="Username">
+                                <input id="password" name="password" type="password" class="form-control {% if messages %} is-invalid {% endif %}" placeholder="**********">
                               </div>
                               <small id="password" class="form-text text-danger">{{errors.password | error}}</small>
                           </div>
