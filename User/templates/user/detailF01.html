@@ -132,6 +132,29 @@
             </div>
         </div>
         <div class="card mt-3">
+            <div class="card-header">Servicio</div>
+            <div class="m-0 p-0">
+                <div class="row border-bottom m-0">
+                    <div class="col-md-6 col-lg-4 border p-3">
+                        <h5 class="text-center">Servicio Solicitado</h5>
+                        <div class="pl-3 pr-3">
+                            {% for package in packages %}
+                                <div class="custom-control custom-radio">
+                                    <input disabled {{ case.fk_package.id_package | radio:package.id_package}} type="radio" id="servicio{{ package.id_package }}" value="{{ package.id_package }}" name="fk_package" class="custom-control-input">
+                                    <label class="custom-control-label" for="servicio{{ package.id_package }}">{{ package.name }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-8 border p-3">
+                        <h5 class="text-center" for="observations">Observaciones</h5>
+                        <textarea readonly class="form-control {{errors.observations | invalid}}" id="observations" name="observations" rows="7">{{case.observations}}</textarea>
+                        <div class="text-danger small">{{errors.observations | error}}</div>
+                    </div>      
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
             <div class="card-header">Solititud</div>
             <div class="card-body">
                 <div class="row">

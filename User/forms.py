@@ -1,5 +1,6 @@
 from django import forms
-from .models import User, Case, Patient
+from .models import User, Case, Patient, Package
+
 
 class createPatientForm(forms.ModelForm):
     id_card = forms.CharField(max_length=15)
@@ -36,7 +37,8 @@ class createF01Form(forms.ModelForm):
         ('s', 'subagudo'),
         ('c', 'cronico'),
     )
-    fk_patient = forms.ModelChoiceField(queryset=Patient.objects.all(), widget=forms.IntegerField, empty_label=None)
+    fk_patient = forms.ModelChoiceField(queryset=Patient.objects.all(), empty_label=None)
+    fk_package = forms.ModelChoiceField(queryset=Package.objects.all(), empty_label=None)
     process_q = forms.CharField()
     etiology = forms.ChoiceField(choices=etiology_choices)
     zone = forms.ChoiceField(choices=zone_choices)
@@ -50,6 +52,7 @@ class createF01Form(forms.ModelForm):
     class Meta:
         model = Case
         fields = [
+            'fk_package',
             'fk_patient',
             'process_q',
             'etiology',

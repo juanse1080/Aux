@@ -53,10 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def show(self):
         return self.__dict__
 
-
-
 class Patient(models.Model):
-    id_card = models.CharField(max_length=15, unique=True)
+    id_card = models.CharField(max_length=15, unique=True, primary_key=True)
     birth = models.DateField()
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
@@ -65,11 +63,12 @@ class Patient(models.Model):
 
 class Package(models.Model):
     id_package = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=250)
 
 class Service(models.Model):
     id_service = models.AutoField(primary_key=True)
     fk_package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
-
+    name = models.CharField(max_length=250)
 
 class Case(models.Model):
     sex_choices = (

@@ -179,34 +179,12 @@
                         <div class="col-md-6 col-lg-4 border p-3">
                             <h5 class="text-center">Servicio Solicitado</h5>
                             <div class="pl-3 pr-3">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="servicio1" value="1" name="servicio" class="custom-control-input">
-                                    <label class="custom-control-label" for="servicio1">Planeamiento pre-quirúrgico</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="servicio2" value="2" name="servicio" class="custom-control-input">
-                                    <label class="custom-control-label" for="servicio2">Prototipo Pre-quirúrjico</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="servicio3" value="3" name="servicio" class="custom-control-input">
-                                    <label class="custom-control-label" for="servicio3">Prototipo Guía Corte</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="servicio4" value="4" name="servicio" class="custom-control-input">
-                                    <label class="custom-control-label" for="servicio4">Biomodelo Virtual</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="servicio5" value="5" name="servicio" class="custom-control-input">
-                                    <label class="custom-control-label" for="servicio5">Prototipo Post-quirúrjico</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="servicio6" value="6" name="servicio" class="custom-control-input">
-                                    <label class="custom-control-label" for="servicio6">Molde Obtención Injertos</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="servicio7" value="6" name="servicio" class="custom-control-input">
-                                    <label class="custom-control-label" for="servicio7">Diseño de Implante</label>
-                                </div>
+                                {% for package in packages %}
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="servicio{{ package.id_package }}" value="{{ package.id_package }}" name="fk_package" class="custom-control-input">
+                                        <label class="custom-control-label" for="servicio{{ package.id_package }}">{{ package.name }}</label>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-8 border p-3">
