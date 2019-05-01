@@ -17,8 +17,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     hability = models.TextField()
     email = models.CharField(max_length=60, unique=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)   
-    is_active = models.BooleanField(_('active'), default=True)
-
+    is_staff = models.BooleanField(
+        _('staff status'),
+        default=False,
+        help_text=_('Designates whether the user can log into this admin site.'),
+    )
+    is_active = models.BooleanField(
+        _('active'),
+        default=True,
+        help_text=_(
+            'Designates whether this user should be treated as active. '
+            'Unselect this instead of deleting accounts.'
+        ),
+    )
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -29,16 +40,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def get_full_name(self):
-        '''
-        Returns the first_name plus the last_name, with a space in between.
-        '''
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self):
-        '''
-        Returns the short name for the user.
-        '''
         return self.first_name
 
     # def email_user(self, subject, message, from_email=None, **kwargs):
@@ -91,6 +96,12 @@ class Case(models.Model):
         ('s', 'subagudo'),
         ('c', 'cronico'),
     )
+    state_choices = (
+        (1, 'cotizacion'),
+        (2, 'ejecucion'),
+        (3, 'suspencion'),
+        (4, 'finalizacion'),
+    )
     id_case = models.AutoField(primary_key=True,  help_text="ID del caso")
     start_day = models.DateField(auto_now_add=True)
     fk_patient = models.ForeignKey(Patient, null=False, blank=False, on_delete=models.CASCADE)
@@ -98,6 +109,7 @@ class Case(models.Model):
     fk_package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
     ips = models.CharField(max_length=100)
     sex = models.CharField(max_length=10, choices=sex_choices)
+    state = models.CharField(max_length=10, choices=state_choices)
     age = models.CharField(max_length=3)
     metallic_artifact = models.BooleanField(default=False)
     deadline = models.CharField(max_length=3)

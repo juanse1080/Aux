@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from .middleware import admin
 from django.db.models import Q
+
 
 from .forms import createPatientForm, createF01Form
 from .models import User, Case, Patient, Package
 
-@login_required
+@user_passes_test(admin)
 def detailF01(request, pk):
     return render(request, 'user/detailF01.html', {'case': Case.objects.get(id_case=pk), 'packages' : Package.objects.all()})
 
