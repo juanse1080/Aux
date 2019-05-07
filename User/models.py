@@ -6,13 +6,19 @@ from django.utils.translation import ugettext_lazy as _
 from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
+    role_choices = (
+        (1, 'administrador'),
+        (2, 'ingenieria_inversa'),
+        (3, 'suspencion'),
+        (4, 'finalizacion'),
+    )
     id_card = models.CharField(primary_key=True, max_length=15, unique=True)
     birth = models.DateField(null=True)
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
     phone = models.CharField(max_length=10)
     address = models.CharField(max_length=100)
-    role = models.CharField(max_length=1)
+    role = models.CharField(max_length=1, choices=role_choices)
     specialty = models.TextField()
     hability = models.TextField()
     email = models.CharField(max_length=60, unique=True)
