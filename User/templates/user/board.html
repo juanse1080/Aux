@@ -1,8 +1,8 @@
-{% extends './navbar.html' %}
+{% extends '../admin/blank.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
 <!-- {% load dir %} -->
-    <div class="container">
+    <div class="container-fluid">
         <div class="card mb-3">
             <div class="card-header">Solicitudes</div>
             <div class="list-group">
@@ -27,7 +27,9 @@
                 </div>
                 {% endif %}
             </div>
-            <ul class="list-group list-group-flush"></ul>
+            <div class="list-group">
+                
+            </div>
         </div>
     </div>
 

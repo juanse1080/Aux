@@ -1,2 +1,2 @@
 def admin(user):
-    return True if user.role == '1' else False
+    return True if user.role == 'A' else False

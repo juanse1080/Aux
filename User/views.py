@@ -15,25 +15,25 @@ def detailF01(request, pk):
 def board(request):
     cas = Case.objects.all()
     if request.user.role == 'C':
-        request = cas
+        req = cas
         case = cas
     elif request.user.role == 'A':
-        request = cas
+        req = cas
         case = cas
     elif request.user.role == 'I':
-        request = cas
+        req = cas
         case = cas
     elif request.user.role == 'D':
-        request = cas
+        req = cas
         case = cas
     elif request.user.role == 'P':
-        request = cas
+        req = cas
         case = cas
     elif request.user.role == 'G':
-        request = cas
+        req = cas
         case = cas
     elif request.user.role == 'M':
-        request = cas
+        req = cas
         case = cas
     else:
         pass
@@ -42,7 +42,7 @@ def board(request):
         'user/board.html', 
         {
             'case': case,
-            'request': request,
+            'req': req,
         }
     )
 
@@ -59,6 +59,8 @@ def createPatient(request):
                 'birth' : patient.birth
             }})
         return JsonResponse({'errors':form.errors})
+    return JsonResponse({'errors':'peticion no es ajax'})
+    
 
 @login_required
 def createF01(request):
