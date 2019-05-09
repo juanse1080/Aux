@@ -7,10 +7,13 @@ from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     role_choices = (
-        (1, 'administrador'),
-        (2, 'ingenieria_inversa'),
-        (3, 'suspencion'),
-        (4, 'finalizacion'),
+        ('C', 'Ortopedista'),
+        ('A', 'Analista de requerimientos'),
+        ('I', 'Ingenieria inversa'),
+        ('D', 'Diseñador'),
+        ('P', 'P rapido'),
+        ('G', 'Gestor de conocimiento'),
+        ('M', 'Metodologia'),
     )
     id_card = models.CharField(primary_key=True, max_length=15, unique=True)
     birth = models.DateField(null=True)
@@ -103,10 +106,10 @@ class Case(models.Model):
         ('c', 'cronico'),
     )
     state_choices = (
-        (1, 'cotizacion'),
-        (2, 'ejecucion'),
-        (3, 'suspencion'),
-        (4, 'finalizacion'),
+        ('1', 'cotizacion'),
+        ('2', 'ejecucion'),
+        ('3', 'suspencion'),
+        ('4', 'finalizacion'),
     )
     id_case = models.AutoField(primary_key=True,  help_text="ID del caso")
     start_day = models.DateField(auto_now_add=True)
@@ -115,7 +118,7 @@ class Case(models.Model):
     fk_package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
     ips = models.CharField(max_length=100)
     sex = models.CharField(max_length=10, choices=sex_choices)
-    state = models.CharField(max_length=10, choices=state_choices)
+    state = models.CharField(max_length=1, choices=state_choices, default='1')
     age = models.CharField(max_length=3)
     metallic_artifact = models.BooleanField(default=False)
     deadline = models.CharField(max_length=3)

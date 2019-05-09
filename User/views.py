@@ -4,8 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .middleware import admin
 from django.db.models import Q
-
-
 from .forms import createPatientForm, createF01Form
 from .models import User, Case, Patient, Package
 
@@ -15,7 +13,38 @@ def detailF01(request, pk):
 
 @login_required    
 def board(request):
-    return render(request, 'user/board.html', {'case': Case.objects.all()})
+    cas = Case.objects.all()
+    if request.user.role == 'C':
+        request = cas
+        case = cas
+    elif request.user.role == 'A':
+        request = cas
+        case = cas
+    elif request.user.role == 'I':
+        request = cas
+        case = cas
+    elif request.user.role == 'D':
+        request = cas
+        case = cas
+    elif request.user.role == 'P':
+        request = cas
+        case = cas
+    elif request.user.role == 'G':
+        request = cas
+        case = cas
+    elif request.user.role == 'M':
+        request = cas
+        case = cas
+    else:
+        pass
+    return render(
+        request, 
+        'user/board.html', 
+        {
+            'case': case,
+            'request': request,
+        }
+    )
 
 @login_required
 def createPatient(request):
