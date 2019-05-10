@@ -95,3 +95,8 @@ def filterPatient(request):
     }
     return JsonResponse(data)
 
+@login_required
+def detailUser(request):
+    print(User.objects.get(id_card=request.user.id_card).show())
+    return render(request, 'user/detailUser.html', {'user': User.objects.get(id_card=request.user.id_card)})
+

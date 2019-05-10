@@ -1,0 +1,68 @@
+{% extends '../admin/blank.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+{% load static %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card animated fadeIn shadow">
+                    <img src="{% static 'img/default.png' %}" class="card-img" alt="Image profiles">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <small class="text-muted">Cargo:</small>
+                            <div>{{ user.get_role_display }}</div>
+                        </li>
+                        {% if user.specialty%}
+                            <li class="list-group-item">
+                                <small class="text-muted">Especialidad:</small>
+                                <div>{{ user.specialty }}</div>
+                            </li>
+                        {% endif %}
+                        {% if user.hability %}
+                            <li class="list-group-item">
+                                <small class="text-muted">Habilidad:</small>
+                                <div>{{ user.hability }}</div>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-8 mb-3">
+                <div class="card animated fadeIn shadow ">
+                    <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                        <h6 class="m-0 font-weight-bold text-primary">Información personal</h6>
+                    </a>
+                    <div class="collapse show" id="collapseCardExample">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <small class="text-muted">Cédula:</small>
+                                <div>{{ user.id_card }}</div>
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">Fecha de nacimiento:</small>
+                                <div>{{ user.birth }}</div>
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">Nombres:</small>
+                                <div>{{ user.first_name }}</div>
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">Apellidos:</small>
+                                <div>{{ user.last_name }}</div>
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">Telefono:</small>
+                                <div>{{ user.phone }}</div>
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">Dirección:</small>
+                                <div>{{ user.address }}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
