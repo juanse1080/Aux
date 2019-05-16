@@ -26,28 +26,27 @@ def detailF01(request, pk):
 
 @login_required    
 def board(request):
-    cas = Case.objects.all()
     if request.user.role == 'C':
-        req = cas
-        case = cas
+        req = None
+        case = Case.objects.filter(fk_user=request.user.id_card)
     elif request.user.role == 'A':
-        req = cas
-        case = cas
+        req = Case.objects.filter(state='1')
+        case = None
     elif request.user.role == 'I':
-        req = cas
-        case = cas
+        req = None
+        case = None
     elif request.user.role == 'D':
-        req = cas
-        case = cas
+        req = None
+        case = None
     elif request.user.role == 'P':
-        req = cas
-        case = cas
+        req = None
+        case = None
     elif request.user.role == 'G':
-        req = cas
-        case = cas
+        req = None
+        case = None
     elif request.user.role == 'M':
-        req = cas
-        case = cas
+        req = None
+        case = None
     else:
         pass
     return render(

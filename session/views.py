@@ -6,7 +6,7 @@ from django.contrib import messages
 from User import views, models
 
 def template(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect(views.board)
     else:
         if request.method == 'POST':
