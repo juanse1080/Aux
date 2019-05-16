@@ -9,7 +9,20 @@ from .models import User, Case, Patient, Package
 
 @user_passes_test(admin)
 def detailF01(request, pk):
-    return render(request, 'user/detailF01.html', {'case': Case.objects.get(id_case=pk), 'packages' : Package.objects.all()})
+    roles = {
+        'C':'Ortopedista',
+        'A':'Analista de requerimientos',
+        'I':'Ingenieria inversa',
+        'D':'Diseñador',
+        'P':'P rapido',
+        'G':'Gestor de conocimiento',
+        'M':'Metodologia',
+    }
+    return render(request, 'user/detailF01.html', {
+        'case': Case.objects.get(id_case=pk), 
+        'packages' : Package.objects.all(),
+        'roles':roles
+    })
 
 @login_required    
 def board(request):
@@ -82,18 +95,35 @@ def createF01(request):
 
 @login_required
 def filterPatient(request):
-    id_card = request.POST.get('id_card')
-    name = request.POST.get('name')
-    patients = Patient.objects.filter(Q(id_card__contains=id_card) | Q(first_name__contains=name) | Q(last_name__contains=name))
-    data = {
-        'patients': [{
-            'id_card': patient.id_card,
-            'first_name': patient.first_name,
-            'last_name' : patient.last_name,
-            'birth' : patient.birth
-        } for patient in patients ]
-    }
-    return JsonResponse(data)
+    if request.is_ajax():
+        id_card = request.POST.get('id_card')
+        name = request.POST.get('name')
+        patients = Patient.objects.filter(Q(id_card__contains=id_card) | Q(first_name__contains=name) | Q(last_name__contains=name))
+        data = {
+            'patients': [{
+                'id_card': patient.id_card,
+                'first_name': patient.first_name,
+                'last_name' : patient.last_name,
+                'birth' : patient.birth
+            } for patient in patients ]
+        }
+        return JsonResponse(data)
+    return None
+
+@login_required
+def filterRole(request):
+    if request.is_ajax():
+        role = request.POST.get('role')
+        users = User.objects.filter(role=role)
+        data = {
+            'users': [{
+                'id_card': user.id_card,
+                'name': user.get_full_name(),
+            } for user in users ]
+        }
+        return JsonResponse(data)
+    return None
+
 
 @login_required
 def detailUser(request):

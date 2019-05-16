@@ -155,20 +155,46 @@
             </div>
         </div>
         <div class="card mt-3">
-            <div class="card-header">Solititud</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="recession">Selecione el role:</label>
-                            <select class="custom-select mr-sm-2 {{errors.recession | invalid}}" id="recession" name="recession">
-                                <option value="II">Ingenieria Inversa</option>
-                                <option value="R3">Reconstrucción 3D</option>
-                            </select>
+            <form action="{% url 'filterRole' %}" method="post">
+                <div class="card-header">Solititud</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="role">Selecione el cargo:</label>
+                                <select class="custom-select mr-sm-2" id="role" name="role">
+                                    <option selected>Selecciones un cargo</option>
+                                    {% for key, value in roles.items %}
+                                        <option value="{{key}}">{{value}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="user">Selecione un usuario:</label>
+                                <select class="custom-select mr-sm-2" id="user" name="user">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="comment">Comentario:</label>
+                                <textarea class="form-control" name="comment" id="comment" rows="6"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="float-right">
+                                <button type="button" class="btn btn-primary d-none" id="butt">Enviar solicitud</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
         <div class="card mt-3">
             <div class="card-header">
@@ -214,34 +240,31 @@
         </div>
     </div>
     <script>
-        $(".filter").keyup(function () { // realizo una perticion ajax para filtrar los pacientes por cedula y nombre
-            $('.patient').empty(); //limpio la lista de resultados en caso de una previa consulta
-            var id_card = $('#filter_id_card').val();
-            var name = $('#filter_name').val();
-            var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+        $('#role').change(function(){
+            var role = $(this).val();
+            var csrfmiddlewaretoken = '{{csrf_token}}';
             $.ajax({
-                url: "{% url 'filterPatient' %}",
-                data: {
-                    id_card,
-                    name,
-                    csrfmiddlewaretoken,
-                },
+                url: "{% url 'filterRole' %}",
+                data: { role, csrfmiddlewaretoken },
                 method: 'POST',
                 dataType: 'json',
-                success: function (data) { // en caso de que la solicitud haya sido exitosa, listo los resultados 
-                    $.each(data.patients, function(key, value){
-                        $('.patient').append(
-                            '<li class="list-group-item list-group-item-action select" id_card="'+value.id_card+'" name="'+value.first_name+' '+value.last_name+'" id_user="'+value.id_user+'" onclick="fill(this)">'+
-                                '<div class="d-flex w-100 justify-content-between">'+
-                                    '<h5 class="mb-1">'+value.first_name+' '+value.last_name+'</h5>'+
-                                    '<small>'+new Date(value.birth).toLocaleDateString("es-ES", { year: 'numeric', month: 'long', day: 'numeric' })+'</small>'+
-                                '</div>'+
-                                '<p class="mb-1">'+value.id_card+'</p>'+
-                            '</li>'
-                        );
-                    })
-                }
+                success: function (data) {
+                    $('#user').html('');
+                    if(data.users.length > 0){
+                        $.each(data.users, function(key, value){
+                            value = '<option value='+value.id_card+'>'+value.name+'</option>'
+                            $('#user').append(value); //lleno los small helpers de cada input para indicar los errores del formulario
+                        });
+                        $('#butt').toggleClass('d-none');
+                    } else {
+                        value = '<option>No se encuentra un usuario con ese cargo</option>'
+                        $('#user').append(value);
+                        $('#butt').toggleClass('d-none');
+                    }
+                    
+                },
             });
         });
+
     </script>
 {% endblock %}
