@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'navarpsi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mysql_cymysql',
-        'NAME': 'navar',
-        'USER': 'root',
-        'PASSWORD': '',
+        'NAME': 'NavarPSI$navar_db',
+        'USER': 'NavarPSI',
+        'PASSWORD': 'aux_2018',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
