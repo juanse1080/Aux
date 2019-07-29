@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .middleware import admin
 from django.db.models import Q
-from .forms import createPatientForm, createF01Form
-from .models import User, Case, Patient, Package, CasePackage
+from .forms import createPatientForm, createF01Form, createRequeriments
+from .models import User, Case, Patient, Package, CasePackage, Activity, Assigned
 
 @user_passes_test(admin)
 def detailF01(request, case, package):
@@ -25,6 +25,33 @@ def detailF01(request, case, package):
         'packages' : Package.objects.all(),
         'roles':roles
     })
+
+@user_passes_test(admin)
+def requeriments(request, case, package):
+    if request.is_ajax():
+        form = createRequeriments(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            activity = Activity.objects.create(
+                name = 'Requerimiento de información',
+                descripcion = data['comment'],
+                state = True,
+                case_package = CasePackage.objects.get(case=case, package=package)
+            )
+            assigned = Assigned.objects.create(
+                user = data['user'],
+                activity = activity,
+                role = data['role'],
+            )
+            return JsonResponse({'success': True, 'patient': {
+                'user': data['user'],
+                'description' : data['comment'],
+                'date' : assigned.created_at
+            }})
+        return JsonResponse({'errors':form.errors})
+    return JsonResponse({'errors':'peticion no es ajax'})
+
+
 
 @login_required    
 def board(request):

@@ -173,7 +173,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="user">Selecione un usuario:</label>
-                                <select class="custom-select mr-sm-2" id="user" name="user">
+                                <select class="custom-select mr-sm-2" id="user" name="usr">
                                 </select>
                             </div>
                         </div>
@@ -189,7 +189,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="float-right">
-                                <button type="button" class="btn btn-primary d-none" id="butt">Enviar solicitud</button>
+                                <button type="button" class="btn btn-primary d-none" id="butt">Enviar</button>
                             </div>
                         </div>
                     </div>
@@ -270,6 +270,7 @@
             let bandera = true;
             list.forEach(function(element) {
                 console.log(element);
+                element.removeClass("is-invalid");
                 element.addClass(element.val() == "" ? "is-invalid" : "");
                 bandera = false;
             });
@@ -288,8 +289,8 @@
             if(is_null(list)){
                 csrfmiddlewaretoken = '{{csrf_token}}';
                 $.ajax({
-                    url: "{% url 'filterRole' %}",
-                    data: { 
+                    url: "{% url 'createRequeriments' case=case.id_case package=pack.id_package%}",
+                    data: {
                         role,
                         user,
                         comment,

@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Case, Patient, Package
+from .models import User, Case, Patient, Package, Activity
 
 
 class createPatientForm(forms.ModelForm):
@@ -19,6 +19,20 @@ class createPatientForm(forms.ModelForm):
             'phone',
             'address',
         ]
+    
+class createRequeriments(forms.ModelForm):
+    role_choices = (
+        ('C', 'Ortopedista'),
+        ('A', 'Analista de requerimientos'),
+        ('I', 'Ingenieria inversa'),
+        ('D', 'Diseñador'),
+        ('P', 'P rapido'),
+        ('G', 'Gestor de conocimiento'),
+        ('M', 'Metodologia'),
+    )
+    user = forms.ModelChoiceField(queryset=User.objects.all(), empty_label=None)
+    role = forms.ChoiceField(choices=role_choices)
+    comment = forms.CharField()
 
 
 class createF01Form(forms.ModelForm):

@@ -10,7 +10,10 @@
                     {% for case in req %}
                         <div class="card">
                             <div style="cursor: pointer;" class="p-3" id="heading{{case.id_case}}" data-toggle="collapse" data-target="#collapse{{case.id_case}}" aria-expanded="false" aria-controls="collapse{{case.id_case}}">
-                                {{case.getUser.first_name}} {{case.getUser.last_name}} - Caso #{{ case.id_case }}
+                                <span>
+                                    {{case.getUser.first_name}} {{case.getUser.last_name}} - Caso #{{ case.id_case }}
+                                </span>
+                                <i class="float-right fas fa-chevron-circle-down" style="font-size: 1.1rem;"></i>
                             </div>
                         
                             <div id="collapse{{case.id_case}}" class="collapse rounded-0" aria-labelledby="heading{{case.id_case}}" data-parent="#accordionExample">
