@@ -20,6 +20,7 @@ class createPatientForm(forms.ModelForm):
             'address',
         ]
 
+
 class createF01Form(forms.ModelForm):
     etiology_choices = (
         ('c', 'congenito'),
@@ -37,8 +38,8 @@ class createF01Form(forms.ModelForm):
         ('s', 'subagudo'),
         ('c', 'cronico'),
     )
-    fk_patient = forms.ModelChoiceField(queryset=Patient.objects.all(), empty_label=None)
-    fk_package = forms.ModelChoiceField(queryset=Package.objects.all(), empty_label=None)
+    patient = forms.ModelChoiceField(queryset=Patient.objects.all(), empty_label=None)
+    package = forms.ModelChoiceField(queryset=Package.objects.all(), empty_label=None)
     process_q = forms.CharField()
     etiology = forms.ChoiceField(choices=etiology_choices)
     zone = forms.ChoiceField(choices=zone_choices)
@@ -52,8 +53,8 @@ class createF01Form(forms.ModelForm):
     class Meta:
         model = Case
         fields = [
-            'fk_package',
-            'fk_patient',
+            'package',
+            'patient',
             'process_q',
             'etiology',
             'zone',

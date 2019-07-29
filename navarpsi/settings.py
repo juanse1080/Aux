@@ -90,7 +90,8 @@ DATABASES = {
         'NAME': 'NavarPSI$navar_db',
         'USER': 'NavarPSI',
         'PASSWORD': 'aux_2018',
-        'HOST': 'NavarPSI.mysql.pythonanywhere-services.com',
+        # 'HOST': 'NavarPSI.mysql.pythonanywhere-services.com',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }

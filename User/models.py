@@ -75,13 +75,17 @@ class Patient(models.Model):
     phone = models.CharField(max_length=10)
     address = models.CharField(max_length=100, null=True)
 
+    def get_full_name(self):
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
 class Package(models.Model):
     id_package = models.AutoField(primary_key=True)
     name = models.CharField(max_length=250)
 
 class Service(models.Model):
     id_service = models.AutoField(primary_key=True)
-    fk_package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
+    package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
 
 class Case(models.Model):
@@ -113,9 +117,10 @@ class Case(models.Model):
     )
     id_case = models.AutoField(primary_key=True,  help_text="ID del caso")
     start_day = models.DateField(auto_now_add=True)
-    fk_patient = models.ForeignKey(Patient, null=False, blank=False, on_delete=models.CASCADE)
-    fk_user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
-    fk_package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, null=False, blank=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
+    # package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
+    package = models.ManyToManyField(Package, null=False, blank=False, through='CasePackage')
     ips = models.CharField(max_length=100)
     sex = models.CharField(max_length=10, choices=sex_choices)
     state = models.CharField(max_length=1, choices=state_choices, default='1')
@@ -139,4 +144,34 @@ class Case(models.Model):
 
     def show(self):
         return self.__dict__
+
+    def getUser(self):
+        return User.objects.get(id_card=self.user)
+    
+    def getPatiente(self):
+        return Patient.objects.get(id_card=self.patient)
+
+class CasePackage(models.Model):
+    id = models.AutoField(primary_key=True)
+    case = models.ForeignKey(Case, on_delete=models.CASCADE)
+    package = models.ForeignKey(Package, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = (('case', 'package'),)
+
+class Activity(models.Model):
+    id_activity = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    state = models.BooleanField(default=True)
+    case_package = models.ForeignKey(CasePackage, null=False, blank=False, on_delete=models.CASCADE)
+
+class Assigned(models.Model):
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, primary_key=True)
+    activity = models.ForeignKey(Activity, null=False, blank=False, on_delete=models.CASCADE)
+    role = models.CharField(max_length=1, choices=User.role_choices)
+    created_at = models.DateField(auto_now_add=True)
+    class Meta:
+        unique_together = (('user', 'activity'),)
+
+
 

@@ -21,20 +21,20 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                             <label for="filter_id_card">Cédula:</label>
-                            <input type="number" id="filter_id_card" class="form-control filter {{errors.fk_patient | invalid}}">
-                            <small id="h_address" class="form-text text-danger">{{errors.fk_patient | error}}</small>
+                            <input type="number" id="filter_id_card" class="form-control filter {{errors.patient | invalid}}" value="{{data.cedula | old}}">
+                            <small id="h_address" class="form-text text-danger">{{errors.patient | error}}</small>
                         </div>
                             
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                             <label for="filter_name">Nombre:</label>
-                            <input type="text" id="filter_name" class="form-control filter {{errors.fk_patient | invalid}}">
-                            <small id="h_address" class="form-text text-danger">{{errors.fk_patient | error}}</small>
+                            <input type="text" id="filter_name" class="form-control filter {{errors.patient | invalid}}" value="{{data.name | old}}">
+                            <small id="h_address" class="form-text text-danger">{{errors.patient | error}}</small>
                         </div>
                             
                         </div>
-                        <input type="hidden" name="fk_patient" id="fk_patient">
+                        <input type="hidden" name="patient" id="fk_patient" value="{{data.cedula | old}}">
                     </div>
                 </div>
                 <ul class="list-group list-group-flush patient" style="cursor: pointer;">
@@ -48,15 +48,15 @@
                             <h5 class="text-center">Etiología del defecto</h5>
                             <div class="pl-3 pr-3 {{errors.etiology | invalid:'text-danger'}}">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="etiology1" name="etiology" value="c" class="custom-control-input">
+                                    <input {{data.etiology | radio:'c'}} type="radio" id="etiology1" name="etiology" value="c" class="custom-control-input">
                                     <label class="custom-control-label" for="etiology1">Congénito</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="etiology2" name="etiology" value="o" class="custom-control-input">
+                                    <input {{data.etiology | radio:'o'}} type="radio" id="etiology2" name="etiology" value="o" class="custom-control-input">
                                     <label class="custom-control-label" for="etiology2">Oncológico</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="etiology3" name="etiology" value="t" class="custom-control-input">
+                                    <input {{data.etiology | radio:'t'}} type="radio" id="etiology3" name="etiology" value="t" class="custom-control-input">
                                     <label class="custom-control-label" for="etiology3">Traumático</label>
                                     <div class="small">{{errors.etiology | error}}</div>
                                 </div>
@@ -66,19 +66,19 @@
                             <h5 class="text-center">Zona comprometida</h5>
                             <div class="pl-3 pr-3 {{errors.zone | invalid:'text-danger'}}">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="zone1" name="zone" value="s" class="custom-control-input">
+                                    <input {{data.zone | radio:'s'}} type="radio" id="zone1" name="zone" value="s" class="custom-control-input">
                                     <label class="custom-control-label" for="zone1" >Superior</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="zone2" name="zone" value="m" class="custom-control-input">
+                                    <input {{data.zone | radio:'m'}} type="radio" id="zone2" name="zone" value="m" class="custom-control-input">
                                     <label class="custom-control-label" for="zone2" >Media</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="zone3" name="zone" value="i" class="custom-control-input">
+                                    <input {{data.zone | radio:'i'}} type="radio" id="zone3" name="zone" value="i" class="custom-control-input">
                                     <label class="custom-control-label" for="zone3" >Inferior</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="zone4" name="zone" value="c" class="custom-control-input">
+                                    <input {{data.zone | radio:'c'}} type="radio" id="zone4" name="zone" value="c" class="custom-control-input">
                                     <label class="custom-control-label" for="zone4" >Craneo</label>
                                     <div class="small">{{errors.zone | error}}</div>
                                 </div>
@@ -88,15 +88,15 @@
                             <h5 class="text-center">Tiempo de evoluación</h5>
                             <div class="pl-3 pr-3 {{errors.evolution | invalid:'text-danger'}}">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="evolution1" name="evolution" value="a" class="custom-control-input">
+                                    <input {{data.evolution | radio:'a'}} type="radio" id="evolution1" name="evolution" value="a" class="custom-control-input">
                                     <label class="custom-control-label" for="evolution1" >Agudo</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="evolution2" name="evolution" value="s" class="custom-control-input">
+                                    <input {{data.evolution | radio:'s'}} type="radio" id="evolution2" name="evolution" value="s" class="custom-control-input">
                                     <label class="custom-control-label" for="evolution2" >Subagudo</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="evolution3" name="evolution" value="c" class="custom-control-input">
+                                    <input {{data.evolution | radio:'c'}} type="radio" id="evolution3" name="evolution" value="c" class="custom-control-input">
                                     <label class="custom-control-label" for="evolution3" >Crónico</label>
                                     <div class="small">{{errors.evolution | error}}</div>
                                 </div>
@@ -106,23 +106,23 @@
                             <h5 class="text-center">Diametro del tornillo</h5>
                             <div class="pl-3 pr-3 {{errors.screw | invalid:'text-danger'}}">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="screw1" name="screw" value="1,5" class="custom-control-input">
+                                    <input {{data.screw | radio:'1,5'}} type="radio" id="screw1" name="screw" value="1,5" class="custom-control-input">
                                     <label class="custom-control-label" for="screw1">1,5 milimetros</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="screw2" name="screw" value="1,7" class="custom-control-input">
+                                    <input {{data.screw | radio:'1,7'}} type="radio" id="screw2" name="screw" value="1,7" class="custom-control-input">
                                     <label class="custom-control-label" for="screw2">1,7 milimetros</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="screw3" name="screw" value="1,8" class="custom-control-input">
+                                    <input {{data.screw | radio:'1,8'}} type="radio" id="screw3" name="screw" value="1,8" class="custom-control-input">
                                     <label class="custom-control-label" for="screw3">1,8 milimetros</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="screw4" name="screw" value="2" class="custom-control-input">
+                                    <input {{data.screw | radio:'2'}} type="radio" id="screw4" name="screw" value="2" class="custom-control-input">
                                     <label class="custom-control-label" for="screw4">2 milimetros</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="screw5" name="screw" value="otro" class="custom-control-input">
+                                    <input {{data.screw | radio:'otro'}} type="radio" id="screw5" name="screw" value="otro" class="custom-control-input">
                                     <label class="custom-control-label" for="screw5">Otro</label>
                                     <div class="small">{{errors.screw | error}}</div>
                                 </div>
@@ -137,8 +137,8 @@
                             <div class="form-group">
                                 <label for="recession">¿Requiere recesión de hueso?</label>
                                 <select class="custom-select mr-sm-2 {{errors.recession | invalid}}" id="recession" name="recession">
+                                    <option value="0">No</option>
                                     <option value="1">Si</option>
-                                    <option selected value="0">No</option>
                                 </select>
                                 <div class="small">{{errors.recession | error}}</div>
                             </div>
@@ -155,7 +155,7 @@
                         </div>
                         <div class="col-sm-6 col-md-4 border p-3">
                             <h5 class="text-center">Incisiones / Vías de Abordaje Quirúrgico</h5>
-                            <textarea class="form-control {{errors.incisions | invalid}}" name="incisions" rows="7"></textarea>
+                            <textarea class="form-control {{errors.incisions | invalid}}" name="incisions" rows="7"> {{data.incisions | old}} </textarea>
                             <div class="text-danger small">{{errors.incisions | error}}</div>
                         </div>
                     </div>
@@ -165,7 +165,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="process_q">Procedimiento quirúrgico:</label>
-                                <textarea class="form-control {{errors.process_q | invalid}}" name="process_q" id="process_q" rows="6"></textarea>
+                                <textarea class="form-control {{errors.process_q | invalid}}" name="process_q" id="process_q" rows="6"> {{data.process_q | old}}  </textarea>
                                 <div class="text-danger small">{{errors.process_q | error}}</div>
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                             <div class="pl-3 pr-3">
                                 {% for package in packages %}
                                     <div class="custom-control custom-radio">
-                                        <input type="radio" id="servicio{{ package.id_package }}" value="{{ package.id_package }}" name="fk_package" class="custom-control-input">
+                                        <input {{data.package.id_package | radio:package.id_package}} type="radio" id="servicio{{ package.id_package }}" value="{{ package.id_package }}" name="package" class="custom-control-input">
                                         <label class="custom-control-label" for="servicio{{ package.id_package }}">{{ package.name }}</label>
                                     </div>
                                 {% endfor %}
@@ -189,7 +189,7 @@
                         </div>
                         <div class="col-md-6 col-lg-8 border p-3">
                             <h5 class="text-center" for="observations">Observaciones</h5>
-                            <textarea class="form-control {{errors.observations | invalid}}" id="observations" name="observations" rows="7"></textarea>
+                            <textarea class="form-control {{errors.observations | invalid}}" id="observations" name="observations" rows="7"> {{data.observations | old}} </textarea>
                             <div class="text-danger small">{{errors.observations | error}}</div>
                         </div>
                     </div>

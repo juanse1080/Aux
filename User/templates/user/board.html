@@ -4,36 +4,26 @@
 <!-- {% load dir %} -->
     <div class="container-fluid">
         <div class="card mb-3">
-            <div class="card-header">Solicitudes</div>
-            <div class="list-group">
+            <div class="card-header text-center">Solicitudes de servicio</div>
+            <div class="accordion" id="accordionExample">
                 {% if req %}
-                    {% for i in req %}
-                        <a href="{% url 'detailF01' pk=i.id_case %}" class="list-group-item list-group-item-action">Caso {{ i.id_case }}</a>
+                    {% for case in req %}
+                        <div class="card">
+                            <div style="cursor: pointer;" class="p-3" id="heading{{case.id_case}}" data-toggle="collapse" data-target="#collapse{{case.id_case}}" aria-expanded="false" aria-controls="collapse{{case.id_case}}">
+                                {{case.getUser.first_name}} {{case.getUser.last_name}} - Caso #{{ case.id_case }}
+                            </div>
+                        
+                            <div id="collapse{{case.id_case}}" class="collapse rounded-0" aria-labelledby="heading{{case.id_case}}" data-parent="#accordionExample">
+                                <div class="list-group">
+                                    {% for package_case in case.package.all %}
+                                        <a href="{% url 'detailF01' case=case.id_case package=package_case.id_package %}" class="list-group-item list-group-item-action rounded-0 pl-4">- {{package_case.name }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
                 {% else %}
-                    <a class="list-group-item text-center text-muted">No se encuentran solicitudes activas</a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                Casos
-                {% if request.user.role == 'C' %}
-                <div class="float-right">
-                    <a href="{% url 'createF01' %}" data-toggle="tooltip" data-placement="top" title="Agregar Paciente" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-plus-square"></i>
-                        Crear caso
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-            <div class="list-group">
-                {% if case %}
-                    {% for i in case %}
-                        <a href="{% url 'detailF01' pk=i.id_case %}" class="list-group-item list-group-item-action">Caso {{ i.id_case }}</a>
-                    {% endfor %}
-                {% else %}
-                    <a class="list-group-item text-center text-muted">No se encuentran casos activas</a>
+                    <a class="list-group-item text-center text-muted">No se encuentran solicitudes de servicio activas</a>
                 {% endif %}
             </div>
         </div>

@@ -5,10 +5,10 @@ from django.http import JsonResponse
 from .middleware import admin
 from django.db.models import Q
 from .forms import createPatientForm, createF01Form
-from .models import User, Case, Patient, Package
+from .models import User, Case, Patient, Package, CasePackage
 
 @user_passes_test(admin)
-def detailF01(request, pk):
+def detailF01(request, case, package):
     roles = {
         'C':'Ortopedista',
         'A':'Analista de requerimientos',
@@ -18,8 +18,10 @@ def detailF01(request, pk):
         'G':'Gestor de conocimiento',
         'M':'Metodologia',
     }
+    case = CasePackage.objects.get(case=case, package=package)
     return render(request, 'user/detailF01.html', {
-        'case': Case.objects.get(id_case=pk), 
+        'case': case.case,
+        'pack': case.package,
         'packages' : Package.objects.all(),
         'roles':roles
     })
@@ -27,8 +29,10 @@ def detailF01(request, pk):
 @login_required    
 def board(request):
     if request.user.role == 'C':
-        req = None
-        case = Case.objects.filter(fk_user=request.user.id_card)
+        req = Case.objects.all()
+        case = Case.objects.filter(user=request.user.id_card)
+        # case = Case.objects.all()
+        # print(case.package.all())
     elif request.user.role == 'A':
         req = Case.objects.filter(state='1')
         case = None
@@ -83,13 +87,21 @@ def createF01(request):
         if request.POST.get('recession') == '0':
             request.POST.update({'margen_recession': None, 'fastenings' : None})   
         form = createF01Form(request.POST)
-        if form.is_valid():
-            form.cleaned_data
+        if form.is_valid(): #data valid, save form
+            data = form.cleaned_data
             F01 = form.save(commit=False)
-            F01.fk_user = request.user
+            F01.user = request.user
             F01.save()
+            CasePackage.objects.create(
+                case=F01,
+                package=data['package']
+            )
             return redirect(board)
-        return render(request, 'user/createPatient.html', {'errors':form.errors, 'packages' : Package.objects.all()})
+        data = form.cleaned_data
+        if "patient" in data:
+            data['cedula'] = data['patient'].id_card
+            data['name'] = data['patient'].get_full_name()
+        return render(request, 'user/createPatient.html', {'errors':form.errors, 'packages' : Package.objects.all(), 'data': data})
     return render(request, 'user/createPatient.html', {'packages' : Package.objects.all() })
 
 @login_required

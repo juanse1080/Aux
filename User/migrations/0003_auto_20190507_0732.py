@@ -26,7 +26,7 @@ def combine_names(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('User', '0001_initial'),
+        ('User', '0002_auto_20190507_0732'),
     ]
     operations = [
         migrations.RunPython(combine_names),

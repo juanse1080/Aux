@@ -140,7 +140,7 @@
                         <div class="pl-3 pr-3">
                             {% for package in packages %}
                                 <div class="custom-control custom-radio">
-                                    <input disabled {{ case.fk_package.id_package | radio:package.id_package}} type="radio" id="servicio{{ package.id_package }}" value="{{ package.id_package }}" name="fk_package" class="custom-control-input">
+                                    <input disabled {{pack.id_package | radio:package.id_package}} type="radio" id="servicio{{ package.id_package }}" value="{{ package.id_package }}" name="fk_package" class="custom-control-input">
                                     <label class="custom-control-label" for="servicio{{ package.id_package }}">{{ package.name }}</label>
                                 </div>
                             {% endfor %}
@@ -156,7 +156,7 @@
         </div>
         <div class="card mt-3">
             <form action="{% url 'filterRole' %}" method="post">
-                <div class="card-header">Solititud</div>
+                <div class="card-header">Requerimientos de información</div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6">
@@ -257,13 +257,64 @@
                         });
                         $('#butt').toggleClass('d-none');
                     } else {
-                        value = '<option>No se encuentra un usuario con ese cargo</option>'
+                        value = '<option value="">No se encuentra un usuario con ese cargo</option>'
                         $('#user').append(value);
                         $('#butt').toggleClass('d-none');
                     }
                     
                 },
             });
+        });
+
+        let is_null = (list) => {
+            let bandera = true;
+            list.forEach(function(element) {
+                console.log(element);
+                element.addClass(element.val() == "" ? "is-invalid" : "");
+                bandera = false;
+            });
+            return bandera;
+        }
+
+        $('#butt'). click(function(){
+            let role = $('#role').val();
+            let user = $('#user').val();
+            let comment = $('#comment').val();
+            list = [
+                $('#role'),
+                $('#user'), 
+                $('#comment')
+            ]
+            if(is_null(list)){
+                csrfmiddlewaretoken = '{{csrf_token}}';
+                $.ajax({
+                    url: "{% url 'filterRole' %}",
+                    data: { 
+                        role,
+                        user,
+                        comment,
+                        csrfmiddlewaretoken,
+                    },
+                    method: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data)
+                        // $('#user').html('');
+                        // if(data.users.length > 0){
+                        //     $.each(data.users, function(key, value){
+                        //         value = '<option value='+value.id_card+'>'+value.name+'</option>'
+                        //         $('#user').append(value); //lleno los small helpers de cada input para indicar los errores del formulario
+                        //     });
+                        //     $('#butt').toggleClass('d-none');
+                        // } else {
+                        //     value = '<option value="'+'sdcnjsjd'+'">No se encuentra un usuario con ese cargo</option>'
+                        //     $('#user').append(value);
+                        //     $('#butt').toggleClass('d-none');
+                        // }
+                        
+                    },
+                });
+            }
         });
 
     </script>
