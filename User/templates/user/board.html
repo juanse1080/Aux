@@ -11,14 +11,14 @@
                         <div class="card">
                             <div style="cursor: pointer;" class="p-3" id="heading{{case.id_case}}" data-toggle="collapse" data-target="#collapse{{case.id_case}}" aria-expanded="false" aria-controls="collapse{{case.id_case}}">
                                 <span>
-                                    {{case.getUser.first_name}} {{case.getUser.last_name}} - Caso #{{ case.id_case }}
+                                    {{case.user.first_name}} {{case.user.last_name}} - Caso #{{ case.id_case }}
                                 </span>
                                 <i class="float-right fas fa-chevron-circle-down" style="font-size: 1.1rem;"></i>
                             </div>
                         
                             <div id="collapse{{case.id_case}}" class="collapse rounded-0" aria-labelledby="heading{{case.id_case}}" data-parent="#accordionExample">
                                 <div class="list-group">
-                                    {% for package_case in case.package.all %}
+                                    {% for package_case in case.packages.all %}
                                         <a href="{% url 'detailF01' case=case.id_case package=package_case.id_package %}" class="list-group-item list-group-item-action rounded-0 pl-4">- {{package_case.name }}</a>
                                     {% endfor %}
                                 </div>

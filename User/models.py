@@ -16,6 +16,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('M', 'Metodologia'),
     )
     id_card = models.CharField(primary_key=True, max_length=15, unique=True)
+    activitys = models.ManyToManyField('Activity', through='Assigned', related_name='users')
     birth = models.DateField(null=True)
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
@@ -85,7 +86,7 @@ class Package(models.Model):
 
 class Service(models.Model):
     id_service = models.AutoField(primary_key=True)
-    package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
+    package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE, related_name='services')
     name = models.CharField(max_length=250)
 
 class Case(models.Model):
@@ -117,10 +118,10 @@ class Case(models.Model):
     )
     id_case = models.AutoField(primary_key=True,  help_text="ID del caso")
     start_day = models.DateField(auto_now_add=True)
-    patient = models.ForeignKey(Patient, null=False, blank=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, null=False, blank=False, on_delete=models.CASCADE, related_name='cases')
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, related_name='cases')
     # package = models.ForeignKey(Package, null=False, blank=False, on_delete=models.CASCADE)
-    package = models.ManyToManyField(Package, null=False, blank=False, through='CasePackage')
+    packages = models.ManyToManyField(Package, through='CasePackage', related_name='cases')
     ips = models.CharField(max_length=100)
     sex = models.CharField(max_length=10, choices=sex_choices)
     state = models.CharField(max_length=1, choices=state_choices, default='1')
@@ -145,16 +146,11 @@ class Case(models.Model):
     def show(self):
         return self.__dict__
 
-    def getUser(self):
-        return User.objects.get(id_card=self.user)
-    
-    def getPatiente(self):
-        return Patient.objects.get(id_card=self.patient)
-
 class CasePackage(models.Model):
     id = models.AutoField(primary_key=True)
-    case = models.ForeignKey(Case, on_delete=models.CASCADE)
-    package = models.ForeignKey(Package, on_delete=models.CASCADE)
+    case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='case_packages')
+    package = models.ForeignKey(Package, on_delete=models.CASCADE, related_name='case_packages')
+    activity = models.ManyToManyField('Activity', through='CasePackageActivity', related_name='case_packages')
     class Meta:
         unique_together = (('case', 'package'),)
 
@@ -163,15 +159,39 @@ class Activity(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     state = models.BooleanField(default=True)
-    case_package = models.ForeignKey(CasePackage, null=False, blank=False, on_delete=models.CASCADE)
+    case_package = models.ManyToManyField(CasePackage, through='CasePackageActivity', related_name='activitys')
 
 class Assigned(models.Model):
-    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, primary_key=True)
-    activity = models.ForeignKey(Activity, null=False, blank=False, on_delete=models.CASCADE)
+    id_assigned = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, related_name='assigneds')
+    activity = models.ForeignKey(Activity, null=False, blank=False, on_delete=models.CASCADE, related_name='assigneds')
     role = models.CharField(max_length=1, choices=User.role_choices)
     created_at = models.DateField(auto_now_add=True)
     class Meta:
         unique_together = (('user', 'activity'),)
+
+class CasePackageActivity(models.Model):
+    id = models.AutoField(primary_key=True)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name='case_package_activity')
+    case_package = models.ForeignKey(CasePackage, on_delete=models.CASCADE, related_name='case_package_activity')
+    class Meta:
+        unique_together = (('activity', 'case_package'),)
+
+class Comment(models.Model):
+    id_comment = models.AutoField(primary_key=True)
+    comment = models.TextField()
+    created_at = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    case_package_activity = models.ForeignKey(CasePackageActivity, on_delete=models.CASCADE, related_name='comments')
+
+class Notification(models.Model):
+    id_notification = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    created_at = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    case_package_activity = models.ForeignKey(CasePackageActivity, on_delete=models.CASCADE, related_name='notifications')
+
 
 
 

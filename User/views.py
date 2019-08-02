@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from .middleware import admin
 from django.db.models import Q
 from .forms import createPatientForm, createF01Form, createRequeriments
-from .models import User, Case, Patient, Package, CasePackage, Activity, Assigned
+from .models import *
 
 @user_passes_test(admin)
 def detailF01(request, case, package):
@@ -19,7 +19,12 @@ def detailF01(request, case, package):
         'M':'Metodologia',
     }
     case = CasePackage.objects.get(case=case, package=package)
+    activity = case.activity.all().filter(name="Requerimiento de información")
+    # for i in activity:
+    #     for j in i.case_package_activity.all():
+    #         print(j.activity.name.encode('utf-8'))
     return render(request, 'user/detailF01.html', {
+        'act' : activity,
         'case': case.case,
         'pack': case.package,
         'packages' : Package.objects.all(),
@@ -34,9 +39,13 @@ def requeriments(request, case, package):
             data = form.cleaned_data
             activity = Activity.objects.create(
                 name = 'Requerimiento de información',
-                descripcion = data['comment'],
+                description = data['comment'],
                 state = True,
-                case_package = CasePackage.objects.get(case=case, package=package)
+                # case_package = CasePackage.objects.get(case=case, package=package)
+            )
+            case_package_activity = CasePackageActivity.objects.create(
+                case_package = CasePackage.objects.get(case=case, package=package),
+                activity = activity
             )
             assigned = Assigned.objects.create(
                 user = data['user'],
@@ -44,11 +53,12 @@ def requeriments(request, case, package):
                 role = data['role'],
             )
             return JsonResponse({'success': True, 'patient': {
-                'user': data['user'],
+                'role': data['role'],
+                'user': assigned.user.get_full_name(),
                 'description' : data['comment'],
                 'date' : assigned.created_at
             }})
-        return JsonResponse({'errors':form.errors})
+        return JsonResponse({'errors': form.errors})
     return JsonResponse({'errors':'peticion no es ajax'})
 
 

@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Case, Patient, Package, Activity
+from .models import User, Case, Patient, Package, Activity, Assigned
 
 
 class createPatientForm(forms.ModelForm):
@@ -33,6 +33,13 @@ class createRequeriments(forms.ModelForm):
     user = forms.ModelChoiceField(queryset=User.objects.all(), empty_label=None)
     role = forms.ChoiceField(choices=role_choices)
     comment = forms.CharField()
+    class Meta:
+        model = Assigned
+        fields = [
+            'user',
+            'role',
+            'comment'
+        ]
 
 
 class createF01Form(forms.ModelForm):

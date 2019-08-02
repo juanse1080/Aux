@@ -197,6 +197,52 @@
             </form>
         </div>
         <div class="card mt-3">
+            <div class="card-header text-center">Solicitudes de servicio</div>
+            <div class="accordion" id="accordionExample">
+                {% if act %}
+                    {% for activity in act %}
+                        <div class="card">
+                            <div style="cursor: pointer;" class="p-3">
+                                {% for assigned in activity.assigneds.all %}
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{assigned.user.get_full_name}}</h5>
+                                        <small>{{assigned.created_at}}</small>
+                                    </div>
+                                    <p class="mb-1">{{activity.description}}.</p>
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <small>{{assigned.get_role_display}}.</small>
+                                        <small class="btn btn-link" id="heading{{activity.id_activity}}" data-toggle="collapse" data-target="#collapse{{activity.id_activity}}" aria-expanded="false" aria-controls="collapse{{activity.id_activity}}"><a >Discusión</a></small>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        
+                            <div id="collapse{{activity.id_activity}}" class="collapse rounded-0" aria-labelledby="heading{{activity.id_activity}}" data-parent="#accordionExample">
+                                <div class="list-group">
+                                    {% for case_package in activity.case_package_activity.all %}
+                                        {% for comment in case_package.comments.all %}
+                                            <a class="list-group-item list-group-item-action rounded-0 pl-4"> 
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <p>
+                                                        {{ comment.comment }}
+                                                    </p>
+                                                    <small>
+                                                        {{comment.created_at}}
+                                                    </small>
+                                                </div>
+                                                
+                                            </a>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <a class="list-group-item text-center text-muted">No se encuentran solicitudes de servicio activas</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card mt-3">
             <div class="card-header">
                 Propuesta
             </div>
@@ -269,10 +315,9 @@
         let is_null = (list) => {
             let bandera = true;
             list.forEach(function(element) {
-                console.log(element);
                 element.removeClass("is-invalid");
                 element.addClass(element.val() == "" ? "is-invalid" : "");
-                bandera = false;
+                bandera = element.val() == "" ? false : true;
             });
             return bandera;
         }
@@ -299,7 +344,7 @@
                     method: 'POST',
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data)
+                        alert(data)
                         // $('#user').html('');
                         // if(data.users.length > 0){
                         //     $.each(data.users, function(key, value){
