@@ -202,35 +202,54 @@
                 {% if act %}
                     {% for activity in act %}
                         <div class="card">
-                            <div style="cursor: pointer;" class="p-3">
+                            <div class="p-3" title="{{activity.description}}.">
                                 {% for assigned in activity.assigneds.all %}
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">{{assigned.user.get_full_name}}</h5>
                                         <small>{{assigned.created_at}}</small>
                                     </div>
-                                    <p class="mb-1">{{activity.description}}.</p>
+                                    <p class="mb-1">{{activity.description | substring:100}}</p>
                                     <div class="d-flex w-100 justify-content-between">
                                         <small>{{assigned.get_role_display}}.</small>
-                                        <small class="btn btn-link" id="heading{{activity.id_activity}}" data-toggle="collapse" data-target="#collapse{{activity.id_activity}}" aria-expanded="false" aria-controls="collapse{{activity.id_activity}}"><a >Discusión</a></small>
+                                        <div>
+                                            <small class="btn-link" id="heading{{activity.id_activity}}" data-toggle="collapse" data-target="#collapse{{activity.id_activity}}" aria-expanded="false" aria-controls="collapse{{activity.id_activity}}"><a>Discusión</a></small>
+                                            <small class="btn-link response" activity="{{activity.id_activity}}" case_package="{{activity.get_case_package_activity_first.id}}" user="{{assigned.user.id_card}}" onclick="response_({{activity.get_case_package_activity_first.id}}, {{activity.id_activity}})"><a>Responder</a></small>
+                                        </div>
                                     </div>
                                 {% endfor %}
                             </div>
                         
                             <div id="collapse{{activity.id_activity}}" class="collapse rounded-0" aria-labelledby="heading{{activity.id_activity}}" data-parent="#accordionExample">
-                                <div class="list-group">
+                                <div class="list-group" id="list{{activity.id_activity}}">
                                     {% for case_package in activity.case_package_activity.all %}
                                         {% for comment in case_package.comments.all %}
-                                            <a class="list-group-item list-group-item-action rounded-0 pl-4"> 
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <p>
-                                                        {{ comment.comment }}
-                                                    </p>
-                                                    <small>
-                                                        {{comment.created_at}}
-                                                    </small>
-                                                </div>
-                                                
-                                            </a>
+                                            {% if comment.user.id_card == request.user.id_card %}
+                                                <a class="list-group-item rounded-0 pl-4 border-0 "> 
+                                                    <div class="p-2 list-group-item-info rounded-lg pl-3 pr-3 float-right">
+                                                        <div class="d-flex justify-content-end">
+                                                            {{ comment.comment }}
+                                                        </div>
+                                                        <div class="d-flex justify-content-end">
+                                                            <small>
+                                                                {{ comment.created_at }}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            {% else %}
+                                                <a class="list-group-item rounded-0 pl-4 border-0 "> 
+                                                    <div class="p-2 list-group-item-secondary rounded-lg pl-3 pr-3 float-left">
+                                                        <div class="d-flex justify-content-start">
+                                                            {{ comment.comment }}
+                                                        </div>
+                                                        <div class="d-flex justify-content-end">
+                                                            <small>
+                                                                {{ comment.created_at }}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            {% endif %}
                                         {% endfor %}
                                     {% endfor %}
                                 </div>
@@ -285,7 +304,67 @@
             </div>
         </div>
     </div>
+
     <script>
+
+        let comment_ = (case_package, activity) => {
+            comment = $('#text'+case_package+activity);
+            list = [
+                comment
+            ]
+            if(is_null(list)){
+                csrfmiddlewaretoken = '{{csrf_token}}';
+                $.ajax({
+                    url: "{% url 'createComment' %}",
+                    data: {
+                        case_package_activity: case_package,
+                        comment: comment.val(),
+                        csrfmiddlewaretoken,
+                    },
+                    method: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        if(data.success){
+                            $('.comment'+case_package+activity)[0].remove();
+                            html = ''+
+                            '<a class="list-group-item rounded-0 pl-4 border-0"> '+
+                                '<div class="p-2 list-group-item-info rounded-lg pl-3 pr-3 float-right">'+
+                                    '<div class="d-flex justify-content-end">'+
+                                        data.comment.comment+
+                                    '</div>'+
+                                    '<div class="d-flex justify-content-end">'+
+                                        '<small>'+
+                                            data.comment.date+
+                                        '</small>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</a>';
+                            $('#list'+activity).append(html);
+                            response_(case_package, activity);
+                        }
+                    },
+                });
+            }
+        }
+
+        let response_ = (case_package, activity) => {
+            item = $('.comment'+case_package+activity);
+            if(item.length == 0){
+                html = ''+
+                    '<a class="d-flex border-0 list-group-item rounded-0 pl-4 comment'+case_package+activity+'" case_package="'+case_package+'" activity="'+activity+'">'+
+                        '<input class="form-control mr-3" id="text'+case_package+activity+'">'+
+                        '<button class="btn btn-primary" onclick="comment_('+case_package+', '+activity+')"><i class="fas fa-reply"></i></button>'+
+                    '</a>';
+                new_ = $('#list'+activity).append(html);
+            }
+            content = $('#collapse'+activity);
+            content.collapse('show');
+            item = $('.comment'+case_package+activity);
+            // console.log(item[0].children[0]);
+            item[0].children[0].focus();
+        }
+
         $('#role').change(function(){
             var role = $(this).val();
             var csrfmiddlewaretoken = '{{csrf_token}}';
@@ -312,16 +391,6 @@
             });
         });
 
-        let is_null = (list) => {
-            let bandera = true;
-            list.forEach(function(element) {
-                element.removeClass("is-invalid");
-                element.addClass(element.val() == "" ? "is-invalid" : "");
-                bandera = element.val() == "" ? false : true;
-            });
-            return bandera;
-        }
-
         $('#butt'). click(function(){
             let role = $('#role').val();
             let user = $('#user').val();
@@ -344,20 +413,37 @@
                     method: 'POST',
                     dataType: 'json',
                     success: function (data) {
-                        alert(data)
-                        // $('#user').html('');
-                        // if(data.users.length > 0){
-                        //     $.each(data.users, function(key, value){
-                        //         value = '<option value='+value.id_card+'>'+value.name+'</option>'
-                        //         $('#user').append(value); //lleno los small helpers de cada input para indicar los errores del formulario
-                        //     });
-                        //     $('#butt').toggleClass('d-none');
-                        // } else {
-                        //     value = '<option value="'+'sdcnjsjd'+'">No se encuentra un usuario con ese cargo</option>'
-                        //     $('#user').append(value);
-                        //     $('#butt').toggleClass('d-none');
-                        // }
-                        
+                        if(data.success){
+                            description = (data.activity.description.length > 100) 
+                                ? data.activity.description.substring(0, 100)+' ...'
+                                : data.activity.description +'.';
+                            html = ''+
+                            '<div class="card">'+
+                                '<div class="p-3" title="'+data.activity.description+'.">'+
+                                    '<div class="d-flex w-100 justify-content-between">'+
+                                        '<h5 class="mb-1">'+data.activity.user+'</h5>'+
+                                        '<small>'+data.activity.date+'</small>'+
+                                    '</div>'+
+                                    '<p class="mb-1">'+ description +'</p>'+
+                                    '<div class="d-flex w-100 justify-content-between">'+
+                                        '<small>'+data.activity.role+'.</small>'+
+                                        '<div>'+
+                                            '<small class="btn-link" id="heading'+data.activity.id+'" '+'data-toggle="collapse" data-target="#collapse'+data.activity.id+'" aria-expanded="false" aria-controls="collapse'+data.activity.id+'"><a>Discusión </a></small>'+
+                                            '<small class="btn-link response" activity="'+data.activity.id+'" case_package="'+data.activity.case_package+'" user="'+data.activity.user_id+'" onclick="response_('+
+                                            data.activity.id+', '+data.activity.case_package+')"><a> Responder</a></small>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+                                '<div id="collapse'+data.activity.id+'" class="collapse rounded-0" aria-labelledby="heading'+data.activity.id+'" data-parent="#accordionExample">'+
+                                    '<div class="list-group" id="list'+data.activity.id+'">'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>';
+                            $('#accordionExample').append(html);
+                            list.forEach(function(element) {
+                                element.val('');
+                            });
+                        }                       
                     },
                 });
             }

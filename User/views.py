@@ -4,8 +4,43 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .middleware import admin
 from django.db.models import Q
-from .forms import createPatientForm, createF01Form, createRequeriments
+from .forms import *
 from .models import *
+
+@login_required
+def comments(request):
+    # if request.is_ajax():
+    comments_ = []
+    cases = request.user.cases.all()
+    for case in cases:
+        for package in case.case_packages.all():
+            for case_package_activity in package.case_package_activity.all():
+                for comment in case_package_activity.comments.all()[:2]:
+                    if comment.state:
+                        comments_.append({
+                            'comment':comment.comment,
+                            'user':comment.user.get_short_name(),
+                            'date':comment.created_at
+                        })
+                        print(comment.comment.encode('utf-8'))
+    return JsonResponse({'success': True, 'comments': comments_})
+    # return JsonResponse({'errors':'Petición no es ajax'})
+
+@login_required
+def createComment(request):
+    if request.is_ajax():
+        form = createCommentForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.save()
+            return JsonResponse({'success': True, 'comment': {
+                'comment': comment.comment,
+                'date': comment.created_at.strftime("%d de %B de %Y")
+            }})
+        return JsonResponse({'errors':form.errors})
+    return JsonResponse({'errors':'Petición no es ajax'})
 
 @user_passes_test(admin)
 def detailF01(request, case, package):
@@ -19,7 +54,7 @@ def detailF01(request, case, package):
         'M':'Metodologia',
     }
     case = CasePackage.objects.get(case=case, package=package)
-    activity = case.activity.all().filter(name="Requerimiento de información")
+    activity = case.activity.all().filter(name="Requerimiento de información").order_by('assigneds__created_at')
     # for i in activity:
     #     for j in i.case_package_activity.all():
     #         print(j.activity.name.encode('utf-8'))
@@ -41,7 +76,6 @@ def requeriments(request, case, package):
                 name = 'Requerimiento de información',
                 description = data['comment'],
                 state = True,
-                # case_package = CasePackage.objects.get(case=case, package=package)
             )
             case_package_activity = CasePackageActivity.objects.create(
                 case_package = CasePackage.objects.get(case=case, package=package),
@@ -52,14 +86,17 @@ def requeriments(request, case, package):
                 activity = activity,
                 role = data['role'],
             )
-            return JsonResponse({'success': True, 'patient': {
-                'role': data['role'],
+            return JsonResponse({'success': True, 'activity': {
+                'id': activity.id_activity,
+                'case_package': case_package_activity.id,
+                'role': assigned.get_role_display(),
                 'user': assigned.user.get_full_name(),
+                'user_id': assigned.user.id_card,
                 'description' : data['comment'],
-                'date' : assigned.created_at
+                'date' : assigned.created_at.strftime("%d de %B de %Y")
             }})
         return JsonResponse({'errors': form.errors})
-    return JsonResponse({'errors':'peticion no es ajax'})
+    return JsonResponse({'errors':'Petición no es ajax'})
 
 
 
@@ -112,7 +149,7 @@ def createPatient(request):
                 'birth' : patient.birth
             }})
         return JsonResponse({'errors':form.errors})
-    return JsonResponse({'errors':'peticion no es ajax'})
+    return JsonResponse({'errors':'Petición no es ajax'})
     
 
 @login_required

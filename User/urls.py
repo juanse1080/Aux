@@ -5,8 +5,10 @@ from . import views
 urlpatterns = [
     url('filter/patiente/', views.filterPatient, name='filterPatient'),
     url('filter/role/', views.filterRole, name='filterRole'),
+    url('comments/', views.comments, name='comments'),
     url('create/patient/', views.createPatient, name='createPatient'),
     url('create/requeriments/(?P<case>[0-9]+)/(?P<package>[0-9]+)', views.requeriments, name='createRequeriments'),
+    url('create/comment/', views.createComment, name='createComment'),
     url('create/', views.createF01, name='createF01'),
     url('detailF01/(?P<case>[0-9]+)/(?P<package>[0-9]+)', views.detailF01, name='detailF01'),
     url('detail/', views.detailUser, name='detailUser'),

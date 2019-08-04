@@ -30,6 +30,10 @@ def old(value): #checkea el valor correspondiente
     return value if value else ''
 
 @register.filter
+def substring(value, size): #retorna un string recortado con longitud igual a size
+    return value[:size]+' ...' if len(value) > size else value+'.'
+
+@register.filter
 def is_in(var, args):
     if args is None:
         return False

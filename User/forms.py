@@ -1,6 +1,15 @@
 from django import forms
-from .models import User, Case, Patient, Package, Activity, Assigned
+from .models import *
 
+class createCommentForm(forms.ModelForm):
+    comment = forms.CharField()
+    case_package_activity = forms.ModelChoiceField(queryset=CasePackageActivity.objects.all(), empty_label=None)
+    class Meta:
+        model = Comment
+        fields = [
+            'comment', 
+            'case_package_activity',
+        ]
 
 class createPatientForm(forms.ModelForm):
     id_card = forms.CharField(max_length=15)

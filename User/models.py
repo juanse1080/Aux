@@ -161,6 +161,9 @@ class Activity(models.Model):
     state = models.BooleanField(default=True)
     case_package = models.ManyToManyField(CasePackage, through='CasePackageActivity', related_name='activitys')
 
+    def get_case_package_activity_first(self):
+        return self.case_package_activity.all()[0]
+
 class Assigned(models.Model):
     id_assigned = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, related_name='assigneds')
@@ -183,6 +186,7 @@ class Comment(models.Model):
     created_at = models.DateField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     case_package_activity = models.ForeignKey(CasePackageActivity, on_delete=models.CASCADE, related_name='comments')
+    state = models.BooleanField(default=True)
 
 class Notification(models.Model):
     id_notification = models.AutoField(primary_key=True)
