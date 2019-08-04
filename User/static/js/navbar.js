@@ -1,4 +1,4 @@
-let loadComments = (csrfmiddlewaretoken) => {
+let loadComments = (csrfmiddlewaretoken = $('meta[name=csrf]').attr("content")) => {
     let panel = $('#comments');
     $.ajax({
         url: "/user/comments/",
@@ -8,7 +8,7 @@ let loadComments = (csrfmiddlewaretoken) => {
         method: 'POST',
         dataType: 'json',
         success: function (data) {
-            console.log(data);
+            // console.log(data.comments);
             if(data.success){
                 html = '';
                 $.each( data.comments, function(key, value) {
@@ -22,14 +22,16 @@ let loadComments = (csrfmiddlewaretoken) => {
                         '</div>'+
                     '</a>';
                 });
-                panel.after(html);
+                panel.html(html);
+                $('#items').html(data.comments.length > 5 ? '5+' : data.comments.length)
             }
         },
     });
 }
 
 $(document).ready(function(){
+    $.ajaxSetup({'cache':false});
     csrfmiddlewaretoken = $('meta[name=csrf]').attr("content");
     loadComments(csrfmiddlewaretoken);
-    setInterval(loadComments(csrfmiddlewaretoken), 5000);
+    setInterval(loadComments, 15000);
 });

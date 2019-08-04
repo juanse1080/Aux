@@ -380,11 +380,11 @@
                             value = '<option value='+value.id_card+'>'+value.name+'</option>'
                             $('#user').append(value); //lleno los small helpers de cada input para indicar los errores del formulario
                         });
-                        $('#butt').toggleClass('d-none');
+                        $('#butt').removeClass('d-none');
                     } else {
                         value = '<option value="">No se encuentra un usuario con ese cargo</option>'
                         $('#user').append(value);
-                        $('#butt').toggleClass('d-none');
+                        $('#butt').removeClass('d-none').addClass('d-none');
                     }
                     
                 },
