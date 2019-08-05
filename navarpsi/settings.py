@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'navarpsi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql_cymysql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'NavarPSI$navar_db',
         'USER': 'NavarPSI',
         'PASSWORD': 'aux_2018',
