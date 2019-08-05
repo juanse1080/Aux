@@ -91,7 +91,7 @@ DATABASES = {
         'USER': 'NavarPSI',
         'PASSWORD': 'aux_2018',
         # 'HOST': 'NavarPSI.mysql.pythonanywhere-services.com',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
