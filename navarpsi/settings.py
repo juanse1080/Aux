@@ -96,6 +96,8 @@ DATABASES = {
     }
 }
 
+ALLOWED_HOSTS  =  [ 'navarpsi.pythonanywhere.com' ]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
