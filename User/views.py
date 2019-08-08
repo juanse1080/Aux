@@ -24,7 +24,6 @@ def comments(request):
                                     'user':comment.user.get_short_name(),
                                     'date':comment.created_at.strftime("%d de %B de %Y")
                                 })
-                                print(comment.comment.encode('utf-8'))
 
         activitys = request.user.activitys.all()
         if len(activitys) > 0:
@@ -37,7 +36,6 @@ def comments(request):
                                 'user':comment.user.get_short_name(),
                                 'date':comment.created_at.strftime("%d de %B de %Y")
                             })
-                            print(comment.comment.encode('utf-8'))
         return JsonResponse({'success': True, 'comments': comments_})
     return JsonResponse({'errors':'Petición no es ajax'})
 
@@ -73,7 +71,10 @@ def detailF01(request, case, package):
         'M':'Metodologia',
     }
     case = CasePackage.objects.get(case=case, package=package)
-    activity = case.activity.all().filter(name="Requerimiento de información").filter(state=True).order_by('assigneds__created_at')
+    if request.user.role == 'A':
+        activity = case.activity.all().filter(name="Requerimiento de información").filter(state=True).order_by('assigneds__created_at')
+    else:
+        activity = case.activity.all().filter(name="Requerimiento de información").filter(state=True).order_by('assigneds__created_at').filter(assigneds__user=request.user)
     # for i in activity:
     #     for j in i.case_package_activity.all():
     #         print(j.activity.name.encode('utf-8'))
@@ -122,28 +123,33 @@ def requeriments(request, case, package):
 @login_required    
 def board(request):
     if request.user.role == 'C':
-        req = Case.objects.all()
-        case = Case.objects.filter(user=request.user.id_card)
+        req = Case.objects.filter(user=request.user).filter(state='1')  
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1')
         # case = Case.objects.all()
         # print(case.package.all())
     elif request.user.role == 'A':
-        req = Case.objects.filter(state='1')
-        case = None
+        case = Activity.objects.filter(state='1')
+        # for i in case:
+        #     for j in i.case_package.all():
+        #         print(type(j))
+        req = Case.objects.filter(state='1')   
+        # for i in case:
+        #     print(i.user.first_name)
     elif request.user.role == 'I':
-        req = None
-        case = None
+        req = Case.objects.filter(user=request.user).filter(state='1')  
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1')
     elif request.user.role == 'D':
-        req = None
-        case = None
+        req = Case.objects.filter(user=request.user).filter(state='1')  
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1')
     elif request.user.role == 'P':
-        req = None
-        case = None
+        req = Case.objects.filter(user=request.user).filter(state='1')  
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1')
     elif request.user.role == 'G':
-        req = None
-        case = None
+        req = Case.objects.filter(user=request.user).filter(state='1')  
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1')
     elif request.user.role == 'M':
-        req = None
-        case = None
+        req = Case.objects.filter(user=request.user).filter(state='1')  
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1')
     else:
         pass
     return render(
@@ -231,6 +237,5 @@ def filterRole(request):
 
 @login_required
 def detailUser(request):
-    print(User.objects.get(id_card=request.user.id_card).show())
     return render(request, 'user/detailUser.html', {'user': User.objects.get(id_card=request.user.id_card)})
 

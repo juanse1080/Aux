@@ -34,11 +34,8 @@ def substring(value, size): #retorna un string recortado con longitud igual a si
     return value[:size]+' ...' if len(value) > size else value+'.'
 
 @register.filter
-def is_in(var, args):
-    if args is None:
-        return False
-    arg_list = [arg.strip() for arg in args.split(',')]
-    return var in arg_list
+def activity_count_comments(activity, value): #retorna el valor de count_comments
+    return activity.count_comments(value)
 
 
 

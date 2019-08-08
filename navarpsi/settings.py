@@ -86,17 +86,18 @@ WSGI_APPLICATION = 'navarpsi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        # 'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql_cymysql',
         'NAME': 'NavarPSI$navar_db',
         'USER': 'NavarPSI',
         'PASSWORD': 'aux_2018',
-        'HOST': 'NavarPSI.mysql.pythonanywhere-services.com',
+        # 'HOST': 'NavarPSI.mysql.pythonanywhere-services.com',
         # 'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
 
-ALLOWED_HOSTS  =  [ 'navarpsi.pythonanywhere.com' ]
+# ALLOWED_HOSTS  =  [ 'navarpsi.pythonanywhere.com' ]
 
 
 # Password validation

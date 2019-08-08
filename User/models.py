@@ -164,6 +164,12 @@ class Activity(models.Model):
     def get_case_package_activity_first(self):
         return self.case_package_activity.all()[0]
 
+    def get_case_package_first(self):
+        return self.case_package.all()[0]
+
+    def count_comments(self, case_package_id):
+        return len(self.case_package_activity.all().get(case_package=case_package_activity_id).comments.all())
+
 class Assigned(models.Model):
     id_assigned = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, related_name='assigneds')

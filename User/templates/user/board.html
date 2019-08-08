@@ -3,23 +3,43 @@
 {% block content %}
 <!-- {% load dir %} -->
     <div class="container-fluid">
-        <div class="card mb-3">
-            <div class="card-header text-center">Solicitudes de servicio</div>
+        <div class="accordion mb-3" id="accordionExample">
+            <div class="card animated fadeIn shadow">
+                <div class="card-header text-center" href="#collapseActivitys" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseActivitys" style="height: 51px">
+                    <h6 class="m-0">Actividades</h6>
+                </div>
+                <div class="collapse show" id="collapseActivitys">
+                    <div class="list-group">
+                        {% if case %}
+                            {% for activity in case %}
+                                {% for package_case in activity.case_package.all %}
+                                    <a href="{% url 'detailF01' case=package_case.case.id_case package=package_case.package.id_package %}" class="list-group-item list-group-item-action rounded-0 pl-4">
+                                        Case #{{package_case.case.id_case}} - {{activity.name}}
+                                    </a>
+                                {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            <a class="list-group-item text-center text-muted">No se encuentran actividades activas</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3 animated fadeIn shadow">
+            <div class="card-header text-center">
+                Solicitudes de servicio
+            </div>
             <div class="accordion" id="accordionExample">
                 {% if req %}
                     {% for case in req %}
                         <div class="card">
-                            <div style="cursor: pointer;" class="p-3" id="heading{{case.id_case}}" data-toggle="collapse" data-target="#collapse{{case.id_case}}" aria-expanded="false" aria-controls="collapse{{case.id_case}}">
-                                <span>
-                                    {{case.user.first_name}} {{case.user.last_name}} - Caso #{{ case.id_case }}
-                                </span>
-                                <i class="float-right fas fa-chevron-circle-down" style="font-size: 1.1rem;"></i>
-                            </div>
-                        
-                            <div id="collapse{{case.id_case}}" class="collapse rounded-0" aria-labelledby="heading{{case.id_case}}" data-parent="#accordionExample">
+                            <a href="#collapse{{case.id_case}}" class="d-block card-body py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapse{{case.id_case}}">
+                                <h6 class="m-0 font-weight-bold text-primary">{{case.user.first_name}} {{case.user.last_name}} - Caso #{{ case.id_case }}</h6>
+                            </a>
+                            <div class="collapse" id="collapse{{case.id_case}}">
                                 <div class="list-group">
                                     {% for package_case in case.packages.all %}
-                                        <a href="{% url 'detailF01' case=case.id_case package=package_case.id_package %}" class="list-group-item list-group-item-action rounded-0 pl-4">- {{package_case.name }}</a>
+                                        <a href="{% url 'detailF01' case=case.id_case package=package_case.id_package %}" class="list-group-item list-group-item-action rounded-0 pl-4">{{package_case.name }}</a>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -29,6 +49,19 @@
                     <a class="list-group-item text-center text-muted">No se encuentran solicitudes de servicio activas</a>
                 {% endif %}
             </div>
+        </div>
+        <div class="row justify-content-start">
+            <div class="col-12">
+                {% if request.user.role == 'C' %}
+                    <div class="float-right">
+                        <a href="{% url 'createF01' %}" data-toggle="tooltip" data-placement="left" title="Crear Paciente" class="btn btn-sm btn-outline-primary animated fadeIn shadow">
+                            <i class="fas fa-plus-square"></i>
+                            Crear caso
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
         </div>
     </div>
 

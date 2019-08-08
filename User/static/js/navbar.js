@@ -23,7 +23,8 @@ let loadComments = (csrfmiddlewaretoken = $('meta[name=csrf]').attr("content")) 
                     '</a>';
                 });
                 panel.html(html);
-                $('#items').html(data.comments.length > 5 ? '5+' : data.comments.length)
+                if(data.comments.length < 0)
+                    $('#items').html(data.comments.length > 5 ? '5+' : data.comments.length)
             }
         },
     });
