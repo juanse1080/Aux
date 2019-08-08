@@ -123,33 +123,33 @@ def requeriments(request, case, package):
 @login_required    
 def board(request):
     if request.user.role == 'C':
-        req = Case.objects.filter(user=request.user).filter(state='1').annonate(Case=id_case)
-        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(Activity=id_activity)
+        req = Case.objects.filter(user=request.user).filter(state='1').annonate(case=id_case)
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(activity=id_activity)
         # case = Case.objects.all()
         # print(case.package.all())
     elif request.user.role == 'A':
-        case = Activity.objects.filter(state='1').annonate(Activity=id_activity)
+        case = Activity.objects.filter(state='1').annonate(activity=id_activity)
         # for i in case:
         #     for j in i.case_package.all():
         #         print(type(j))
-        req = Case.objects.filter(state='1').annonate(Case=id_case)
+        req = Case.objects.filter(state='1').annonate(case=id_case)
         # for i in case:
         #     print(i.user.first_name)
     elif request.user.role == 'I':
-        req = Case.objects.filter(user=request.user).filter(state='1').annonate(Case=id_case)
-        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(Activity=id_activity)
+        req = Case.objects.filter(user=request.user).filter(state='1').annonate(case=id_case)
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(activity=id_activity)
     elif request.user.role == 'D':
-        req = Case.objects.filter(user=request.user).filter(state='1').annonate(Case=id_case)
-        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(Activity=id_activity)
+        req = Case.objects.filter(user=request.user).filter(state='1').annonate(case=id_case)
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(activity=id_activity)
     elif request.user.role == 'P':
-        req = Case.objects.filter(user=request.user).filter(state='1').annonate(Case=id_case)
-        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(Activity=id_activity)
+        req = Case.objects.filter(user=request.user).filter(state='1').annonate(case=id_case)
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(activity=id_activity)
     elif request.user.role == 'G':
-        req = Case.objects.filter(user=request.user).filter(state='1').annonate(Case=id_case)
-        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(Activity=id_activity)
+        req = Case.objects.filter(user=request.user).filter(state='1').annonate(case=id_case)
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(activity=id_activity)
     elif request.user.role == 'M':
-        req = Case.objects.filter(user=request.user).filter(state='1').annonate(Case=id_case)
-        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(Activity=id_activity)
+        req = Case.objects.filter(user=request.user).filter(state='1').annonate(case=id_case)
+        case = Activity.objects.filter(assigneds__user=request.user).filter(state='1').annonate(activity=id_activity)
     else:
         pass
     return render(
