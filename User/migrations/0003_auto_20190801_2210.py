@@ -9,6 +9,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     def combine_names(apps, schema_editor):
+        """
+            This method creates seven instances of the Package class
+        """
         # We can't import the Person model directly as it may be a newer
         # version than this migration expects. We use the historical version.
         names = [

@@ -2,6 +2,14 @@ from django import forms
 from .models import *
 
 class createCommentForm(forms.ModelForm):
+    """
+        Comment creation form
+        Attributes:
+            comment {str}
+                This attribute is the comment
+            case_package_activity {CasePackageActivity}
+                This attribute is the model of the relationship between the case, the package and the activity
+    """
     comment = forms.CharField()
     case_package_activity = forms.ModelChoiceField(queryset=CasePackageActivity.objects.all(), empty_label=None)
     class Meta:
@@ -12,6 +20,23 @@ class createCommentForm(forms.ModelForm):
         ]
 
 class createPatientForm(forms.ModelForm):
+    """
+        Patient creation form
+        Attributes:
+            id_card {str}
+                This attribute is patient identification
+            birt {date}
+                This attribute is the patient's date of birth
+            first_name {str}
+                This attribute is the patient's first name
+            last_name {str}
+                This attribute is the patient's last name
+            phone {int}
+                This attribute is the patient's phone number
+            address {str}
+                This attribute is the patient's address
+
+    """
     id_card = forms.CharField(max_length=15)
     birth = forms.DateField(input_formats=["%m/%d/%Y"])
     first_name = forms.CharField(max_length=35)
@@ -30,6 +55,16 @@ class createPatientForm(forms.ModelForm):
         ]
     
 class createRequeriments(forms.ModelForm):
+    """
+        Requeriments creation form
+        Attributes:
+            user {User}
+                This attribute is the selected user
+            role {str:role_choices}
+                This attribute is the selected position
+            comment {str}
+                This attribute is the comment corresponding to the requirement
+    """
     role_choices = (
         ('C', 'Ortopedista'),
         ('A', 'Analista de requerimientos'),
@@ -52,6 +87,7 @@ class createRequeriments(forms.ModelForm):
 
 
 class createF01Form(forms.ModelForm):
+    
     etiology_choices = (
         ('c', 'congenito'),
         ('o', 'oncologico'),
@@ -68,6 +104,34 @@ class createF01Form(forms.ModelForm):
         ('s', 'subagudo'),
         ('c', 'cronico'),
     )
+    """
+        Form F01 corresponds to the request
+        Attributes:
+            patient {Patient}
+                This attribute is the selected patient
+            package {str}
+                This attribute is the selected package
+            process_q {str}
+                This attribute is the surgical process
+            etiology {str:etiology_choices}
+                This attribute is the selected etiology
+            zone {str:zone_choices}
+                This attribute is the selected zone
+            evolution {str:evolution_choices}
+                This attribute is the selected evolution
+            screw {str}
+                This attribute is the screw thickness
+            recession {str}
+                This attribute is the status of the recession
+            margen_recession {str}
+                This attribute is the margen of recession
+            fastenings {str}
+                --
+            incisions {str}
+                This attribute is the description of the planned incisions
+            observations {str}
+                This attribute is the observations
+    """
     patient = forms.ModelChoiceField(queryset=Patient.objects.all(), empty_label=None)
     package = forms.ModelChoiceField(queryset=Package.objects.all(), empty_label=None)
     process_q = forms.CharField()

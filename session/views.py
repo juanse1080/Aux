@@ -6,6 +6,14 @@ from django.contrib import messages
 from User import views, models
 
 def template(request):
+    """ 
+        This method redirects to a view depending on the active session
+        Redirect: 
+            {Template} registration/login.html
+                if there is no session
+            {View} board
+               if there is session  
+    """
     if request.user.is_authenticated:
         return redirect(views.board)
     else:
@@ -19,10 +27,24 @@ def template(request):
 
 @login_required
 def logout_view(request):
+    """ 
+        This method clears session data
+        Redirect: 
+            template {Function}
+                
+    """
+
     logout(request)
     return redirect(template)
 
 def auth(request):
+    """ 
+        This method performs the authentication of the user found
+        Return: 
+            {boolean}
+                Transaction status
+            {None}
+    """
     login_valid = get_user(email=request.POST['email'])
     pwd_valid = check_password(request.POST['password'], login_valid.password if login_valid else None)
     if login_valid and pwd_valid:
@@ -30,6 +52,13 @@ def auth(request):
     return None
         
 def get_user(email):
+    """ 
+        This method returns the user found with the email provided, in case of not finding it will return None
+        Return: 
+            {User}
+                User found
+            {None}
+    """
     try:
         return models.User.objects.get(email=email)
     except models.User.DoesNotExist:

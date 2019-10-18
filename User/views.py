@@ -86,8 +86,14 @@ def detailF01(request, case, package):
         'roles':roles
     })
 
-@user_passes_test(admin)
+@user_passes_test(admin) # using middleware admin
 def requeriments(request, case, package):
+    """
+        This view creates information request
+        Returns:
+            {json}
+                This is the information shown in the template
+    """
     if request.is_ajax():
         form = createRequeriments(request.POST)
         if form.is_valid():
@@ -163,6 +169,12 @@ def board(request):
 
 @login_required
 def createPatient(request):
+    """
+        This view creates patients
+        Returns:
+            {json}
+                This is a patient in json format
+    """
     if request.is_ajax():
         form = createPatientForm(request.POST)
         if form.is_valid():
@@ -205,6 +217,12 @@ def createF01(request):
 
 @login_required
 def filterPatient(request):
+    """
+        This view filters patients by id_card and full name
+        Returns:
+            {json}
+                This is a list of patient filtered in json format
+    """
     if request.is_ajax():
         id_card = request.POST.get('id_card')
         name = request.POST.get('name')
@@ -222,6 +240,12 @@ def filterPatient(request):
 
 @login_required
 def filterRole(request):
+    """
+        This view filters users by role, excluding the logged in user
+        Returns:
+            {json}
+                This is a list of users filtered in json format
+    """
     if request.is_ajax():
         role = request.POST.get('role')
         users = User.objects.filter(role=role).exclude(id_card=request.user.id_card)
@@ -237,5 +261,11 @@ def filterRole(request):
 
 @login_required
 def detailUser(request):
+    """
+        This View renders the user data that logged in
+        Returns:
+            {User} -- user
+                This is user that logged in
+    """
     return render(request, 'user/detailUser.html', {'user': User.objects.get(id_card=request.user.id_card)})
 

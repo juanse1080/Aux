@@ -50,10 +50,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def get_full_name(self):
+        """
+            This method get full name 
+            Returns:
+                {str}
+                    This is the full name
+        """
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self):
+        """
+            This method get short name
+            Returns:
+                {str}
+                    This is the fist name
+        """
         return self.first_name
 
     # def email_user(self, subject, message, from_email=None, **kwargs):
@@ -63,9 +75,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     #     send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def __str__(self):
+        """
+            This method cast user to str
+            Returns:
+                {str}
+                    This is user identification
+        """
         return self.id_card
 
     def show(self):
+        """
+            This method cast user to dict
+            Returns:
+                {dict}
+                    This is user in dict format
+        """
         return self.__dict__
 
 class Patient(models.Model):
@@ -141,9 +165,21 @@ class Case(models.Model):
     observations = models.TextField()
 
     def __str__(self):
+        """
+            This method cast to str
+            Returns:
+                {str}
+                    This is case identification
+        """
         return self.id_case
 
     def show(self):
+        """
+            This method cast case to dict
+            Returns:
+                {dict}
+                    This is case in dict format
+        """
         return self.__dict__
 
 class CasePackage(models.Model):
@@ -162,12 +198,30 @@ class Activity(models.Model):
     case_package = models.ManyToManyField(CasePackage, through='CasePackageActivity', related_name='activitys')
 
     def get_case_package_activity_first(self):
+        """
+            This method get first case package activity
+            Returns:
+                {CasePackageActivity}
+                    --
+        """
         return self.case_package_activity.all()[0]
 
     def get_case_package_first(self):
+        """
+            This method get first case package
+            Returns:
+                {CasePackage}
+                    --
+        """
         return self.case_package.all()[0]
 
     def count_comments(self, case_package_id):
+        """
+            This method count the comments
+            Returns:
+                {int}
+                    --
+        """
         return len(self.case_package_activity.all().get(case_package=case_package_activity_id).comments.all())
 
 class Assigned(models.Model):

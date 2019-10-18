@@ -9,6 +9,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     def combine_names(apps, schema_editor):
+        """
+            This method creates three instances of the user class
+        """
         esp = models.User(
             email = 'especialista@gmail.com', 
             password = make_password('clave'),
